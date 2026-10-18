@@ -19,6 +19,9 @@
     "API_KEY_MISSING": "API key missing.",
     "API_KEY_INVALID": "Invalid API key.",
     "NOT_FOUND": "Resource not found.",
-    "INTERNAL": "Internal server error."
+    "INTERNAL": "Internal server error.",
+    "VALIDATION_FAILED": "Invalid data.",
+    "REQUEST_IN_USE": "This request is used by scenarios.",
+    "FOLDER_NOT_EMPTY": "This folder is not empty."
   }
 }

@@ -16,7 +16,7 @@ Préparez des Requêtes REST, assemblez-les en Scénarios séquentiels et/ou par
 ```sh
 npm install
 cp .env.example .env    # facultatif
-npm run db:up           # MongoDB sur 127.0.0.1:27017
+npm run db:up           # MongoDB sur 127.0.0.1:27018
 npm run dev             # API sur http://127.0.0.1:3000, interface sur http://localhost:4200
 ```
 
@@ -38,6 +38,20 @@ npm run dev             # API sur http://127.0.0.1:3000, interface sur http://lo
 | `npm run lint`      | ESLint (TypeScript et templates Angular)         |
 | `npm run format`    | Formate tout le code avec Prettier               |
 | `npm run build`     | Construit l'API (`apps/api/dist`) et l'interface |
+
+## API de gestion
+
+Toutes les routes sont sous `/api`. Les erreurs ont la forme `{ "error": { "code": "…", "details": … } }`.
+
+| Ressource      | Routes                                                                                                          |
+| -------------- | --------------------------------------------------------------------------------------------------------------- |
+| Collections    | `GET/POST /collections`, `GET/PATCH/DELETE /collections/:id`, `GET /collections/:id/tree`                       |
+| Dossiers       | `POST /collections/:id/folders`, `PATCH/DELETE /folders/:id`                                                    |
+| Requêtes       | `POST /collections/:id/requests`, `GET/PUT/DELETE /requests/:id` (`?force=true` si utilisée par des Scénarios)  |
+| Environnements | `GET/POST /collections/:id/environments`, `GET/PUT/DELETE /environments/:id`                                    |
+| Scénarios      | `GET/POST /collections/:id/scenarios`, `GET/PUT/DELETE /scenarios/:id`, `GET /scenarios/:id/issues` (Anomalies) |
+
+Les **Variables secrètes** sont chiffrées en base (AES-256-GCM, clé `SECRET_KEY`) et ne sont jamais renvoyées : l'API indique seulement `hasValue`. Pour garder une valeur secrète inchangée, renvoyez la Variable sans `value`.
 
 ## Sécurité
 

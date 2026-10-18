@@ -19,6 +19,9 @@
     "API_KEY_MISSING": "Clé d'API manquante.",
     "API_KEY_INVALID": "Clé d'API invalide.",
     "NOT_FOUND": "Ressource introuvable.",
-    "INTERNAL": "Erreur interne du serveur."
+    "INTERNAL": "Erreur interne du serveur.",
+    "VALIDATION_FAILED": "Données invalides.",
+    "REQUEST_IN_USE": "Cette Requête est utilisée par des Scénarios.",
+    "FOLDER_NOT_EMPTY": "Ce dossier n'est pas vide."
   }
 }

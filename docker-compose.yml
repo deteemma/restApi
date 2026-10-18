@@ -5,7 +5,8 @@ services:
     restart: unless-stopped
     ports:
       # Exposé uniquement en local (voir ADR 0001 / Q44).
-      - '127.0.0.1:27017:27017'
+      # 27018 côté hôte : 27017 est souvent occupé par un MongoDB installé localement.
+      - '127.0.0.1:27018:27017'
     volumes:
       - mongo-data:/data/db
 
