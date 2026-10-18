@@ -11,6 +11,10 @@ export const ErrorCode = {
   /** Suppression refusée : la Requête est utilisée par des Scénarios (listés dans `details`). */
   RequestInUse: 'REQUEST_IN_USE',
   FolderNotEmpty: 'FOLDER_NOT_EMPTY',
+  /** Lancement refusé : le Scénario a des Anomalies bloquantes (listées dans `details`). */
+  ScenarioInvalid: 'SCENARIO_INVALID',
+  /** Lancement refusé : trop d'Exécutions simultanées sur le serveur. */
+  TooManyRuns: 'TOO_MANY_RUNS',
   Internal: 'INTERNAL',
 } as const;
 

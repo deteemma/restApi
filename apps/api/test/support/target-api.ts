@@ -8,6 +8,7 @@ import { generate } from 'selfsigned';
 export interface ReceivedCall {
   method: string;
   path: string;
+  headers: Record<string, string | string[] | undefined>;
   startedAt: number;
   endedAt?: number;
 }
@@ -19,6 +20,7 @@ export interface ReceivedCall {
  * - `GET /delay/:ms` répond après ce délai et sert à mesurer la concurrence réelle ;
  * - `POST /items` crée un élément (201 avec un `id`), et `GET /items/:id` le relit (sinon 404) ;
  * - `GET /redirect` redirige (302) vers /echo ;
+ * - `GET /big/:kb` répond un texte de cette taille (en Kio) ;
  * - `GET /text` répond en texte brut ;
  * - `GET /headers?name=value` renvoie les en-têtes demandés.
  */
@@ -73,7 +75,12 @@ export class TargetApi {
   }
 
   private track(req: express.Request, res: express.Response): void {
-    const call: ReceivedCall = { method: req.method, path: req.path, startedAt: performance.now() };
+    const call: ReceivedCall = {
+      method: req.method,
+      path: req.path,
+      headers: req.headers,
+      startedAt: performance.now(),
+    };
     this.calls.push(call);
     this.inFlight++;
     this.maxInFlight = Math.max(this.maxInFlight, this.inFlight);
@@ -112,6 +119,9 @@ export class TargetApi {
     });
     app.get('/redirect', (_req, res) => {
       res.redirect(302, '/echo');
+    });
+    app.get('/big/:kb', (req, res) => {
+      res.type('text/plain').send('x'.repeat(Number(req.params.kb) * 1024));
     });
     app.get('/text', (_req, res) => {
       res.type('text/plain').send('hello');

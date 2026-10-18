@@ -189,6 +189,8 @@ export interface SentRequest {
   url: string;
   headers: Record<string, string>;
   body?: string;
+  /** Vrai si le corps stocké a été tronqué. */
+  bodyTruncated?: boolean;
 }
 
 export interface ReceivedResponse {
@@ -197,6 +199,8 @@ export interface ReceivedResponse {
   headers: Record<string, string>;
   body: string;
   durationMs: number;
+  /** Vrai si le corps stocké a été tronqué. */
+  bodyTruncated?: boolean;
 }
 
 export interface AssertionResult {

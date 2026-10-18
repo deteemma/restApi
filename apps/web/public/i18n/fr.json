@@ -22,6 +22,8 @@
     "INTERNAL": "Erreur interne du serveur.",
     "VALIDATION_FAILED": "Données invalides.",
     "REQUEST_IN_USE": "Cette Requête est utilisée par des Scénarios.",
-    "FOLDER_NOT_EMPTY": "Ce dossier n'est pas vide."
+    "FOLDER_NOT_EMPTY": "Ce dossier n'est pas vide.",
+    "SCENARIO_INVALID": "Ce Scénario contient des Anomalies bloquantes.",
+    "TOO_MANY_RUNS": "Trop d'Exécutions en cours. Réessayez dans un instant."
   }
 }

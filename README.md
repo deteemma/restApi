@@ -51,6 +51,27 @@ Toutes les routes sont sous `/api`. Les erreurs ont la forme `{ "error": { "code
 | Environnements | `GET/POST /collections/:id/environments`, `GET/PUT/DELETE /environments/:id`                                    |
 | Scénarios      | `GET/POST /collections/:id/scenarios`, `GET/PUT/DELETE /scenarios/:id`, `GET /scenarios/:id/issues` (Anomalies) |
 
+## API d'exécution
+
+| Action                          | Route                                                                         |
+| ------------------------------- | ----------------------------------------------------------------------------- |
+| Lancer un Scénario              | `POST /scenarios/:id/runs` `{ environmentId?, parameters? }` → 202            |
+| Suivre en direct (SSE)          | `GET /runs/:id/events` (rejoue le passé, puis diffuse jusqu'à `run.finished`) |
+| Arrêter                         | `POST /runs/:id/stop`                                                         |
+| Historique                      | `GET /runs?scenarioId=&collectionId=&status=&limit=`, `GET /runs/:id`         |
+| Épingler                        | `PATCH /runs/:id` `{ pinned }`                                                |
+| Envoyer une Requête seule       | `POST /requests/:id/send` `{ environmentId?, draft? }`                        |
+| Derniers Envois (20 au maximum) | `GET /requests/:id/sends`                                                     |
+
+Exemple en ligne de commande (par exemple depuis une CI) :
+
+```sh
+curl -X POST http://127.0.0.1:3000/api/scenarios/<id>/runs -H 'Content-Type: application/json' -d '{"parameters":{"tenant":"acme"}}'
+curl -N http://127.0.0.1:3000/api/runs/<runId>/events
+```
+
+Les Exécutions non épinglées sont purgées après `RUN_RETENTION_DAYS` jours (30 par défaut). Ce qui est stocké ou diffusé masque les valeurs secrètes (`••••••`) et les identifiants des en-têtes `Authorization`, et tronque les corps au-delà de 1 Mo.
+
 Les **Variables secrètes** sont chiffrées en base (AES-256-GCM, clé `SECRET_KEY`) et ne sont jamais renvoyées : l'API indique seulement `hasValue`. Pour garder une valeur secrète inchangée, renvoyez la Variable sans `value`.
 
 ## Sécurité

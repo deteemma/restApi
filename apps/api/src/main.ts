@@ -4,6 +4,7 @@ import { createApp } from './app';
 import { loadConfig } from './config';
 import { SecretBox } from './secrets/secret-box';
 import { resolveSecretKey } from './secrets/secret-key';
+import { RunManager } from './runs/run-manager';
 import { createStore } from './store/store';
 
 const repoRoot = fileURLToPath(new URL('../../../', import.meta.url));
@@ -27,7 +28,17 @@ const box = new SecretBox(
 const connection = await mongoose
   .createConnection(config.mongodbUri, { serverSelectionTimeoutMS: 5000 })
   .asPromise();
-const app = createApp(config, { store: createStore(connection, box) });
+const store = createStore(connection, box);
+const interrupted = await store.runs.markInterrupted(new Date());
+if (interrupted > 0)
+  console.warn(
+    `${interrupted} Exécution(s) interrompue(s) par l'arrêt du serveur : marquées Arrêtées.`,
+  );
+const runs = new RunManager(store, {
+  maxConcurrentRuns: config.maxConcurrentRuns,
+  retentionDays: config.runRetentionDays,
+});
+const app = createApp(config, { store, runs });
 
 app.listen(config.port, config.host, () => {
   const auth = config.apiKey ? "clé d'API exigée" : "sans clé d'API";

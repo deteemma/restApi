@@ -18,6 +18,7 @@ import {
   type RequestDto,
   type RequestInUseDetails,
   type RequestInput,
+  type RunSnapshot,
   type ScenarioDto,
   type ScenarioInput,
   type ScenarioIssue,
@@ -34,7 +35,9 @@ import {
   type RequestDoc,
   type ScenarioDoc,
 } from './models';
-import { applyInputs, toView } from './variables';
+import { isObjectId, toObjectId } from './ids';
+import { createRunStore } from './run-store';
+import { applyInputs, toRecord, toView } from './variables';
 
 /** Propriétaire unique de la V1 (mono-utilisateur). Toutes les opérations sont déjà filtrées par propriétaire. */
 export const LOCAL_OWNER = 'local';
@@ -47,11 +50,9 @@ export type Store = ReturnType<typeof createStore>;
  */
 export function createStore(connection: Connection, box: SecretBox) {
   const m = registerModels(connection);
+  const { runs, sends } = createRunStore(m);
 
-  const oid = (id: string | null | undefined): Types.ObjectId => {
-    if (!id || !/^[a-f\d]{24}$/i.test(id)) throw notFound();
-    return new Types.ObjectId(id);
-  };
+  const oid = toObjectId;
 
   async function findCollection(owner: string, id: string) {
     const doc = await m.Collection.findOne({ _id: oid(id), owner }).lean<CollectionDoc>();
@@ -132,6 +133,8 @@ export function createStore(connection: Connection, box: SecretBox) {
         m.Request.deleteMany(scope),
         m.Environment.deleteMany(scope),
         m.Scenario.deleteMany(scope),
+        runs.deleteForCollection(owner, _id),
+        sends.deleteForCollection(owner, _id),
       ]);
       await m.Collection.deleteOne({ _id, owner });
     },
@@ -291,6 +294,7 @@ export function createStore(connection: Connection, box: SecretBox) {
         }
       }
       await m.Request.deleteOne({ _id: request._id, owner });
+      await sends.deleteForRequest(owner, String(request._id));
     },
   };
 
@@ -420,7 +424,117 @@ export function createStore(connection: Connection, box: SecretBox) {
     },
   };
 
-  return { collections, folders, requests, environments, scenarios };
+  // -------------------------------------------------------------------------
+  // Préparation des Exécutions et des Envois (valeurs secrètes en clair, en mémoire seulement)
+  // -------------------------------------------------------------------------
+
+  /** Variables de la Collection et de l'Environnement choisi, déchiffrées, avec la liste des secrets. */
+  async function executionContext(
+    owner: string,
+    collectionId: Types.ObjectId,
+    environmentId: string | null | undefined,
+  ) {
+    const collection = await m.Collection.findOne({
+      _id: collectionId,
+      owner,
+    }).lean<CollectionDoc>();
+    if (!collection) throw notFound();
+    let environment: EnvironmentDoc | null = null;
+    if (environmentId) {
+      if (!isObjectId(environmentId)) {
+        throw invalid([{ path: 'environmentId', message: 'invalid id' }]);
+      }
+      environment = await m.Environment.findOne({
+        _id: new Types.ObjectId(environmentId),
+        owner,
+        collectionId,
+      }).lean<EnvironmentDoc>();
+      if (!environment) {
+        throw invalid([
+          { path: 'environmentId', message: 'environment not found in this collection' },
+        ]);
+      }
+    }
+    const secrets = [...collection.variables, ...(environment?.variables ?? [])]
+      .filter((v) => v.secret)
+      .map((v) => toRecord([v], box)[v.name]!)
+      .filter((v) => v !== '');
+    return {
+      collection: {
+        variables: toRecord(collection.variables, box),
+        auth: collection.auth as CollectionAuth,
+        settings: collection.settings as HttpSettings,
+      },
+      environment: environment
+        ? { name: environment.name, variables: toRecord(environment.variables, box) }
+        : null,
+      secrets,
+    };
+  }
+
+  const execution = {
+    /**
+     * Instantané d'un Scénario prêt à être lancé, avec ses Anomalies (calculées avec les
+     * Variables réellement disponibles : Collection, Environnement choisi, Paramètres).
+     */
+    async scenarioSnapshot(
+      owner: string,
+      scenarioId: string,
+      environmentId: string | null | undefined,
+      parameters: Record<string, string>,
+    ): Promise<{
+      snapshot: RunSnapshot;
+      secrets: string[];
+      issues: ScenarioIssue[];
+      collectionId: string;
+    }> {
+      const scenarioDoc = await findOwned<ScenarioDoc>(m.Scenario, owner, scenarioId);
+      const ctx = await executionContext(owner, scenarioDoc.collectionId, environmentId);
+      const reqs = await m.Request.find({
+        owner,
+        collectionId: scenarioDoc.collectionId,
+        _id: { $in: scenarioDoc.requestIds.filter(isObjectId) },
+      }).lean<RequestDoc[]>();
+      const scenario = scenarioDto(scenarioDoc);
+      const requestsById = Object.fromEntries(
+        reqs.map((r) => [String(r._id), requestDefinition(r)]),
+      );
+      const snapshot: RunSnapshot = {
+        scenario: { id: scenario.id, name: scenario.name, root: scenario.root },
+        requests: requestsById,
+        collection: ctx.collection,
+        environment: ctx.environment,
+        parameters,
+      };
+      const issues = validateScenario(snapshot.scenario, {
+        requests: requestsById,
+        definedVariables: [
+          ...Object.keys(ctx.collection.variables),
+          ...Object.keys(ctx.environment?.variables ?? {}),
+          ...Object.keys(parameters),
+        ],
+      });
+      return {
+        snapshot,
+        secrets: ctx.secrets,
+        issues,
+        collectionId: String(scenarioDoc.collectionId),
+      };
+    },
+
+    /** Ce qu'il faut pour l'Envoi d'une Requête seule. */
+    async requestContext(
+      owner: string,
+      requestId: string,
+      environmentId: string | null | undefined,
+    ) {
+      const doc = await findOwned<RequestDoc>(m.Request, owner, requestId);
+      const ctx = await executionContext(owner, doc.collectionId, environmentId);
+      return { request: requestDefinition(doc), collectionId: String(doc.collectionId), ...ctx };
+    },
+  };
+
+  return { collections, folders, requests, environments, scenarios, runs, sends, execution };
 }
 
 // ---------------------------------------------------------------------------

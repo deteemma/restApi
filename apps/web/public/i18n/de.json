@@ -22,6 +22,8 @@
     "INTERNAL": "Interner Serverfehler.",
     "VALIDATION_FAILED": "Ungültige Daten.",
     "REQUEST_IN_USE": "Diese Anfrage wird von Szenarien verwendet.",
-    "FOLDER_NOT_EMPTY": "Dieser Ordner ist nicht leer."
+    "FOLDER_NOT_EMPTY": "Dieser Ordner ist nicht leer.",
+    "SCENARIO_INVALID": "Dieses Szenario enthält blockierende Probleme.",
+    "TOO_MANY_RUNS": "Zu viele laufende Ausführungen. Bitte versuchen Sie es gleich erneut."
   }
 }

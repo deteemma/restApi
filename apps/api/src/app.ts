@@ -3,13 +3,17 @@ import { ErrorCode, type ApiErrorBody, type HealthResponse } from '@restapi/shar
 import pkg from '../package.json' with { type: 'json' };
 import type { Config } from './config';
 import { DomainError } from './errors';
+import { runRoutes } from './http/run-routes';
 import { managementRoutes } from './http/routes';
 import { requireApiKey } from './middleware/api-key';
+import type { RunManager } from './runs/run-manager';
 import { LOCAL_OWNER, type Store } from './store/store';
 
 export interface AppDependencies {
   /** Absent : seules les routes sans base de données (santé) sont servies. */
   store?: Store;
+  /** Nécessite `store`. */
+  runs?: RunManager;
 }
 
 export function createApp(config: Config, deps: AppDependencies = {}) {
@@ -35,6 +39,7 @@ export function createApp(config: Config, deps: AppDependencies = {}) {
   });
 
   if (deps.store) api.use(managementRoutes(deps.store));
+  if (deps.store && deps.runs) api.use(runRoutes(deps.store, deps.runs));
 
   api.use((_req, res) => {
     res.status(404).json({ error: { code: ErrorCode.NotFound } } satisfies ApiErrorBody);

@@ -75,12 +75,66 @@ const scenarioSchema = new Schema(
   options,
 );
 
+/** Purge automatique : MongoDB supprime le document à la date `expiresAt` (absente si épinglé). */
+const expiresAt = { type: Date, index: { expireAfterSeconds: 0 } };
+
+const runSchema = new Schema(
+  {
+    owner: { type: String, required: true },
+    collectionId: ref,
+    scenarioId: { type: String, required: true, index: true },
+    scenarioName: { type: String, required: true },
+    environmentName: { type: String, default: null },
+    status: { type: String, required: true },
+    pinned: { type: Boolean, default: false },
+    startedAt: { type: Date, required: true, index: true },
+    finishedAt: { type: Date, default: null },
+    durationMs: { type: Number, default: null },
+    stats: { type: Schema.Types.Mixed, default: null },
+    /** Instantané et Variables finales, valeurs secrètes masquées. */
+    snapshot: mixed,
+    variables: { type: Schema.Types.Mixed, default: {} },
+    expiresAt,
+  },
+  options,
+);
+
+/** Une Étape terminée d'une Exécution (collection séparée : un document est limité à 16 Mo). */
+const runStepSchema = new Schema(
+  {
+    runId: ref,
+    stepId: { type: String, required: true },
+    status: { type: String, required: true },
+    startedAt: { type: Date, default: null },
+    finishedAt: { type: Date, required: true },
+    result: { type: Schema.Types.Mixed, default: undefined },
+    expiresAt,
+  },
+  { ...options, timestamps: false },
+);
+
+const sendSchema = new Schema(
+  {
+    owner: { type: String, required: true },
+    collectionId: ref,
+    requestId: { type: String, required: true, index: true },
+    at: { type: Date, required: true },
+    environmentName: { type: String, default: null },
+    status: { type: String, required: true },
+    result: mixed,
+  },
+  { ...options, timestamps: false },
+);
+
 export type StoredVariable = InferSchemaType<typeof variableSchema>;
 export type CollectionDoc = InferSchemaType<typeof collectionSchema> & { _id: Types.ObjectId };
 export type FolderDoc = InferSchemaType<typeof folderSchema> & { _id: Types.ObjectId };
 export type RequestDoc = InferSchemaType<typeof requestSchema> & { _id: Types.ObjectId };
 export type EnvironmentDoc = InferSchemaType<typeof environmentSchema> & { _id: Types.ObjectId };
 export type ScenarioDoc = InferSchemaType<typeof scenarioSchema> & { _id: Types.ObjectId };
+export type RunDoc = InferSchemaType<typeof runSchema> & { _id: Types.ObjectId };
+export type RunStepDoc = InferSchemaType<typeof runStepSchema> & { _id: Types.ObjectId };
+export type SendDoc = InferSchemaType<typeof sendSchema> & { _id: Types.ObjectId };
 
 export function registerModels(connection: Connection) {
   return {
@@ -89,6 +143,9 @@ export function registerModels(connection: Connection) {
     Request: connection.model('Request', requestSchema),
     Environment: connection.model('Environment', environmentSchema),
     Scenario: connection.model('Scenario', scenarioSchema),
+    Run: connection.model('Run', runSchema),
+    RunStep: connection.model('RunStep', runStepSchema, 'run_steps'),
+    Send: connection.model('Send', sendSchema),
   };
 }
 

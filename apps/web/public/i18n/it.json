@@ -22,6 +22,8 @@
     "INTERNAL": "Errore interno del server.",
     "VALIDATION_FAILED": "Dati non validi.",
     "REQUEST_IN_USE": "Questa richiesta è usata da scenari.",
-    "FOLDER_NOT_EMPTY": "Questa cartella non è vuota."
+    "FOLDER_NOT_EMPTY": "Questa cartella non è vuota.",
+    "SCENARIO_INVALID": "Questo scenario contiene anomalie bloccanti.",
+    "TOO_MANY_RUNS": "Troppe esecuzioni in corso. Riprova tra poco."
   }
 }

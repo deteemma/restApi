@@ -4,3 +4,5 @@
  */
 export { runScenario, type RunOptions, type RunResult } from './run-scenario';
 export { validateScenario, type ValidationContext } from './validate-scenario';
+export { executeRequestStep, type RequestStepOutcome } from './request-step';
+export { VariableScope } from './variables';

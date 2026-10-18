@@ -1,7 +1,6 @@
 import { Router, type Request, type Response } from 'express';
-import type { z } from 'zod';
-import { invalid } from '../errors';
 import type { Store } from '../store/store';
+import { parse } from './parse';
 import {
   collectionInput,
   collectionPatch,
@@ -11,16 +10,6 @@ import {
   requestInput,
   scenarioInput,
 } from './schemas';
-
-function parse<S extends z.ZodType>(schema: S, body: unknown): z.output<S> {
-  const result = schema.safeParse(body);
-  if (!result.success) {
-    throw invalid(
-      result.error.issues.map((issue) => ({ path: issue.path.join('.'), message: issue.message })),
-    );
-  }
-  return result.data;
-}
 
 const owner = (res: Response) => res.locals['owner'] as string;
 const param = (req: Request, name: string) => String(req.params[name]);

@@ -22,6 +22,8 @@
     "INTERNAL": "Internal server error.",
     "VALIDATION_FAILED": "Invalid data.",
     "REQUEST_IN_USE": "This request is used by scenarios.",
-    "FOLDER_NOT_EMPTY": "This folder is not empty."
+    "FOLDER_NOT_EMPTY": "This folder is not empty.",
+    "SCENARIO_INVALID": "This scenario has blocking issues.",
+    "TOO_MANY_RUNS": "Too many runs in progress. Try again shortly."
   }
 }

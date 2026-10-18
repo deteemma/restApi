@@ -10,13 +10,16 @@ import {
   type RequestAuth,
   type RequestBody,
   type RequestInput,
+  type RunInput,
+  type RunPatch,
+  type SendInput,
   type ScenarioInput,
   type Step,
   type VariableInput,
 } from '@restapi/shared';
 
 /** Même grammaire que les {{Variables}} reconnues par le moteur. */
-const variableName = z.string().regex(/^[\w.-]{1,100}$/, 'invalid variable name');
+export const variableName = z.string().regex(/^[\w.-]{1,100}$/, 'invalid variable name');
 const name = z.string().trim().min(1).max(200);
 const text = (max = 100_000) => z.string().max(max);
 export const objectIdLike = z.string().regex(/^[a-f\d]{24}$/i, 'invalid id');
@@ -169,3 +172,22 @@ export const environmentInput = z.object({
   name,
   variables: variables.optional(),
 }) satisfies z.ZodType<EnvironmentInput>;
+
+export const runInput = z.object({
+  environmentId: objectIdLike.nullable().optional(),
+  parameters: z.record(variableName, text()).optional(),
+}) satisfies z.ZodType<RunInput>;
+
+export const runPatch = z.object({ pinned: z.boolean() }) satisfies z.ZodType<RunPatch>;
+
+export const sendInput = z.object({
+  environmentId: objectIdLike.nullable().optional(),
+  draft: requestInput.optional(),
+}) satisfies z.ZodType<SendInput>;
+
+export const runListQuery = z.object({
+  collectionId: objectIdLike.optional(),
+  scenarioId: z.string().max(100).optional(),
+  status: z.enum(['running', 'succeeded', 'failed', 'stopped']).optional(),
+  limit: z.coerce.number().int().min(1).max(500).optional(),
+});
