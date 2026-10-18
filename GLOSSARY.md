@@ -94,6 +94,10 @@ _Avoid_: Exécution favorite, baseline
 Le lancement d'une Requête seule depuis son éditeur, en dehors de tout Scénario. On en garde un historique léger, distinct de celui des Exécutions.
 _Avoid_: Exécution unitaire, test rapide
 
+**Anomalie** (Scenario issue):
+Un problème détecté dans un Scénario dès sa conception. Une Anomalie **bloquante** empêche le lancement (par exemple une Étape orpheline, ou deux Extractions du même nom dans un même Groupe parallèle). Un **avertissement** le permet mais signale un risque (par exemple une Variable qui n'est définie nulle part).
+_Avoid_: Erreur de validation, warning, lint
+
 **Étape orpheline** (Orphan step):
 Une Étape-requête dont la Requête référencée a été supprimée. Elle est invalide tant qu'on ne l'a pas réassociée ou retirée.
 _Avoid_: Étape cassée
@@ -107,6 +111,10 @@ _Avoid_: État, résultat
 **Ignorée** (Skipped):
 Le statut d'une Étape qui n'a pas été lancée parce qu'une Étape a échoué avant elle ou parce que l'Exécution a été arrêtée.
 _Avoid_: Sautée, annulée
+
+**Arrêtée** (Stopped):
+Le statut d'une Étape qui avait démarré mais que l'arrêt manuel a interrompue : une Pause en cours, ou un Groupe qui n'a pas pu terminer toutes ses Étapes. Une requête déjà partie n'est jamais Arrêtée : elle va jusqu'au bout et garde son vrai résultat.
+_Avoid_: Annulée, interrompue
 
 **Statut d'Exécution**:
 L'un des états En cours, Réussie, Échouée ou Arrêtée.
