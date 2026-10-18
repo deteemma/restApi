@@ -1,0 +1,13 @@
+services:
+  mongo:
+    image: mongo:8
+    container_name: restapi-mongo
+    restart: unless-stopped
+    ports:
+      # Exposé uniquement en local (voir ADR 0001 / Q44).
+      - '127.0.0.1:27017:27017'
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:

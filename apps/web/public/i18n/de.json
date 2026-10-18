@@ -1,0 +1,24 @@
+{
+  "app": {
+    "title": "RestApi"
+  },
+  "shell": {
+    "language": {
+      "change": "Sprache ändern"
+    },
+    "api": {
+      "online": "API verbunden · v{{ version }}",
+      "offline": "API nicht erreichbar"
+    }
+  },
+  "home": {
+    "title": "Willkommen",
+    "subtitle": "Bereiten Sie Ihre Anfragen vor, stellen Sie sie zu Szenarien zusammen und führen Sie sie bei Bedarf aus."
+  },
+  "errors": {
+    "API_KEY_MISSING": "API-Schlüssel fehlt.",
+    "API_KEY_INVALID": "Ungültiger API-Schlüssel.",
+    "NOT_FOUND": "Ressource nicht gefunden.",
+    "INTERNAL": "Interner Serverfehler."
+  }
+}

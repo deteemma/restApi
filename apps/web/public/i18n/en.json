@@ -1,0 +1,24 @@
+{
+  "app": {
+    "title": "RestApi"
+  },
+  "shell": {
+    "language": {
+      "change": "Change language"
+    },
+    "api": {
+      "online": "API connected · v{{ version }}",
+      "offline": "API unreachable"
+    }
+  },
+  "home": {
+    "title": "Welcome",
+    "subtitle": "Prepare your requests, assemble them into scenarios and run them on demand."
+  },
+  "errors": {
+    "API_KEY_MISSING": "API key missing.",
+    "API_KEY_INVALID": "Invalid API key.",
+    "NOT_FOUND": "Resource not found.",
+    "INTERNAL": "Internal server error."
+  }
+}

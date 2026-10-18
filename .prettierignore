@@ -1,0 +1,8 @@
+node_modules
+dist
+coverage
+.angular
+package-lock.json
+.claude
+.agents
+skills-lock.json

@@ -1,0 +1,3 @@
+# Chaque Exécution embarque un Instantané de ce qu'elle a lancé
+
+Au lancement, une Exécution enregistre une copie figée du Scénario, des Requêtes référencées et de l'Environnement résolu, avec les Variables secrètes masquées. Elle ne se contente pas de pointer vers les documents vivants. Cette duplication est volontaire. Comme les Étapes référencent les Requêtes (ADR 0003), toute modification ultérieure falsifierait l'historique. L'Instantané permettra aussi, plus tard, de comparer deux Exécutions côte à côte. En contrepartie, chaque Exécution prend plus de place, ce qui est compensé par la purge à 30 jours.
