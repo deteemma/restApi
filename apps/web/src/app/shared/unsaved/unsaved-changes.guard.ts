@@ -33,7 +33,10 @@ export function warnBeforeUnload(page: PendingChanges): void {
   const window = inject(DOCUMENT).defaultView;
   if (!window) return;
   const listener = (event: BeforeUnloadEvent) => {
-    if (page.hasUnsavedChanges()) event.preventDefault();
+    if (!page.hasUnsavedChanges()) return;
+    event.preventDefault();
+    // Les anciens Chromium (avant 119) et Safari n'avertissent que si returnValue est renseigné.
+    event.returnValue = '';
   };
   window.addEventListener('beforeunload', listener);
   inject(DestroyRef).onDestroy(() => window.removeEventListener('beforeunload', listener));

@@ -127,6 +127,33 @@ describe('RequestPage', () => {
     expect(page.dirty()).toBe(false);
   });
 
+  it("reprend un renommage fait depuis l'arborescence, sans perdre ni ramener l'ancien nom", async () => {
+    const { el, fixture, page } = await setup();
+    const url = el.querySelector<HTMLInputElement>('input.url')!;
+    url.value = '{{baseUrl}}/customers';
+    url.dispatchEvent(new Event('input'));
+    await fixture.whenStable();
+
+    TestBed.inject(WorkspaceStore).tree.set({
+      collection: { id: 'c1', name: 'Boutique' },
+      folders: [],
+      requests: [{ id: 'r1', name: 'Créer un compte', method: 'POST', folderId: null }],
+      scenarios: [],
+      environments: [],
+    });
+    await fixture.whenStable();
+    expect(el.querySelector('h1')?.textContent).toContain('Créer un compte');
+    expect(page.dirty()).toBe(true); // seule l'URL reste à enregistrer
+
+    const saving = page.save();
+    const put = http.expectOne((r) => r.method === 'PUT' && r.url === '/api/requests/r1');
+    expect(put.request.body.name).toBe('Créer un compte');
+    put.flush({ ...saved, name: 'Créer un compte', url: '{{baseUrl}}/customers' });
+    await flushPending({ 'GET /api/collections/c1/tree': TestBed.inject(WorkspaceStore).tree() });
+    await saving;
+    expect(page.dirty()).toBe(false);
+  });
+
   it('évalue les Assertions sur la dernière réponse, avec les Variables de l’Environnement', async () => {
     const { page, fixture } = await setup();
     const sending = page.send();

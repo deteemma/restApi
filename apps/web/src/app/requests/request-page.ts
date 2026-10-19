@@ -127,6 +127,15 @@ export class RequestPage implements PendingChanges {
         this.evaluation.set(null);
       });
     });
+    // Un renommage depuis l'arborescence s'applique au brouillon sans le marquer comme modifié.
+    effect(() => {
+      const name = this.store.tree()?.requests.find((r) => r.id === this.requestId())?.name;
+      if (name === undefined) return;
+      untracked(() => {
+        this.saved.update((s) => (s && s.name !== name ? { ...s, name } : s));
+        this.draft.update((d) => (d && d.name !== name ? { ...d, name } : d));
+      });
+    });
     effect(() => {
       const error = this.request.error() ?? this.sendsResource.error();
       if (error) this.notifier.error(error);

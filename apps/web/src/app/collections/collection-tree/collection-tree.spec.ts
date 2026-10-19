@@ -1,7 +1,8 @@
 import { HttpErrorResponse, provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { Router, provideRouter } from '@angular/router';
 import { ErrorCode, type CollectionTree as Tree } from '@restapi/shared';
 import { translocoTesting } from '../../../testing/transloco-testing';
 import { WorkspaceStore } from '../../core/workspace.store';
@@ -19,6 +20,9 @@ const tree: Tree = {
   environments: [{ id: 'e1', name: 'dev' }],
 };
 
+@Component({ template: '' })
+class BlankPage {}
+
 /** Accès à la méthode protégée qui supprime un élément (après confirmation). */
 type Removable = { remove(kind: string, id: string, name: string): Promise<void> };
 
@@ -30,7 +34,10 @@ describe('CollectionTree', () => {
     TestBed.configureTestingModule({
       imports: [CollectionTree, translocoTesting()],
       providers: [
-        provideRouter([]),
+        provideRouter([
+          { path: 'collections/:collectionId', component: BlankPage },
+          { path: 'collections/:collectionId/requests/:requestId', component: BlankPage },
+        ]),
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: Dialogs, useValue: dialogs },
@@ -105,5 +112,21 @@ describe('CollectionTree', () => {
     dialogs.confirm.mockResolvedValue(false);
     await (fixture.componentInstance as unknown as Removable).remove('scenario', 's1', 'Parcours');
     expect(deleteScenario).not.toHaveBeenCalled();
+  });
+
+  it("revient aux réglages de la Collection quand l'élément supprimé était ouvert, et seulement lui", async () => {
+    const { fixture } = await setup();
+    const router = TestBed.inject(Router);
+    vi.spyOn(store, 'deleteRequest').mockResolvedValue(undefined);
+    dialogs.confirm.mockResolvedValue(true);
+    const tree = fixture.componentInstance as unknown as Removable;
+
+    await router.navigateByUrl('/collections/c1/requests/r12');
+    await tree.remove('request', 'r1', 'Créer');
+    expect(router.url).toBe('/collections/c1/requests/r12');
+
+    await router.navigateByUrl('/collections/c1/requests/r1');
+    await tree.remove('request', 'r1', 'Créer');
+    expect(router.url).toBe('/collections/c1');
   });
 });

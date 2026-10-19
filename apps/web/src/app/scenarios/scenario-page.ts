@@ -134,6 +134,18 @@ export class ScenarioPage implements PendingChanges {
         this.tracker.clear();
       });
     });
+    // Un renommage depuis l'arborescence s'applique au brouillon sans le marquer comme modifié.
+    effect(() => {
+      const name = this.store.tree()?.scenarios.find((s) => s.id === this.scenarioId())?.name;
+      if (name === undefined) return;
+      untracked(() => {
+        const saved = this.saved();
+        if (!saved) return;
+        const savedDraft = JSON.parse(saved) as ScenarioInput;
+        if (savedDraft.name !== name) this.saved.set(JSON.stringify({ ...savedDraft, name }));
+        this.draft.update((d) => (d && d.name !== name ? { ...d, name } : d));
+      });
+    });
     effect(() => {
       const error = this.scenario.error();
       if (error) this.notifier.error(error);

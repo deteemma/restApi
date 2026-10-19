@@ -67,6 +67,7 @@ describe('ScenarioPage', () => {
     const page = fixture.componentInstance as unknown as {
       setRoot(root: GroupStep): void;
       launch(): Promise<void>;
+      save(): Promise<boolean>;
       dirty(): boolean;
       issues(): unknown[];
     };
@@ -116,6 +117,29 @@ describe('ScenarioPage', () => {
     expect(page.dirty()).toBe(false);
     expect(FakeEventSource.urls.at(-1)).toBe('/api/runs/run1/events');
     expect((fixture.nativeElement as HTMLElement).textContent).toContain('Arrêter');
+  });
+
+  it("reprend un renommage fait depuis l'arborescence, sans perdre ni ramener l'ancien nom", async () => {
+    const { page, fixture, el } = await setup();
+    await answerIssues();
+    const store = TestBed.inject(WorkspaceStore);
+    store.tree.update((t) => t && { ...t, scenarios: [{ id: 'sc1', name: 'Parcours client' }] });
+    await fixture.whenStable();
+    expect(el.querySelector('h1')?.textContent).toContain('Parcours client');
+    expect(page.dirty()).toBe(false);
+
+    page.setRoot({ ...scenario.root, mode: 'parallel' });
+    const saving = page.save();
+    const put = http.expectOne((r) => r.method === 'PUT' && r.url === '/api/scenarios/sc1');
+    expect(put.request.body.name).toBe('Parcours client');
+    put.flush({
+      ...scenario,
+      name: 'Parcours client',
+      root: { ...scenario.root, mode: 'parallel' },
+    });
+    expect(await saving).toBe(true);
+    expect(page.dirty()).toBe(false);
+    await answerIssues();
   });
 
   it("n'ouvre pas le lancement si l'enregistrement échoue", async () => {

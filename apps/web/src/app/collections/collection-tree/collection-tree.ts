@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, type ActivatedRouteSnapshot } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { ErrorCode, type RequestInUseDetails } from '@restapi/shared';
 import { firstValueFrom } from 'rxjs';
@@ -184,7 +184,7 @@ export class CollectionTree {
           break;
       }
       // Si l'élément supprimé était ouvert, on revient aux réglages de la Collection.
-      if (this.router.url.includes(`/${id}`)) {
+      if (this.isOpen(id)) {
         await this.router.navigate(
           ['/collections', this.store.collectionId()],
           discardUnsavedChanges,
@@ -208,6 +208,16 @@ export class CollectionTree {
       });
       if (force) await this.store.deleteRequest(id, { force: true });
     }
+  }
+
+  /** Vrai si l'élément est ouvert : son identifiant est un paramètre de la route active. */
+  private isOpen(id: string): boolean {
+    let route: ActivatedRouteSnapshot | null = this.router.routerState.snapshot.root;
+    while (route) {
+      if (Object.values(route.params).includes(id)) return true;
+      route = route.firstChild;
+    }
+    return false;
   }
 
   private expand(folderId: string): void {
