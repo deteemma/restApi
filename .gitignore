@@ -8,3 +8,6 @@ coverage/
 Thumbs.db
 .data/
 .monaco/
+.agents/
+.claude/skills
+skills-lock.json
