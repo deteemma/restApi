@@ -2,9 +2,12 @@ import type { RequestBody, RequestDto, RequestInput } from '@restapi/shared';
 
 export type BodyType = RequestBody['type'];
 
-/** Le brouillon de l'éditeur : la Requête enregistrée, sans ses identifiants. */
+/**
+ * Le brouillon de l'éditeur : la Requête enregistrée, sans ses identifiants ni son Dossier
+ * (absent, il reste inchangé à l'enregistrement, même si la Requête a été déplacée entre-temps).
+ */
 export function draftFrom(request: RequestDto): RequestInput {
-  const { id: _id, collectionId: _collectionId, ...draft } = request;
+  const { id: _id, collectionId: _collectionId, folderId: _folderId, ...draft } = request;
   return draft;
 }
 

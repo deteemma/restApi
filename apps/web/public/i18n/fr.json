@@ -68,7 +68,11 @@
     "emptyScenarios": "Aucun Scénario",
     "emptyEnvironments": "Aucun Environnement",
     "expand": "Déplier « {{ name }} »",
-    "collapse": "Replier « {{ name }} »"
+    "collapse": "Replier « {{ name }} »",
+    "move": "Déplacer vers…",
+    "moveTitle": "Déplacer « {{ name }} » vers",
+    "noMoveTarget": "Aucun autre Dossier où le déplacer.",
+    "root": "Racine de la Collection"
   },
   "dialogs": {
     "renameTitle": "Renommer « {{ name }} »",
@@ -431,5 +435,10 @@
     "exported": "Collection exportée.",
     "imported": "Collection « {{ name }} » importée. Pensez à ressaisir ses Variables secrètes.",
     "invalidFile": "Ce fichier n'est pas un JSON lisible."
+  },
+  "unsaved": {
+    "title": "Modifications non enregistrées",
+    "message": "Vos modifications seront perdues si vous quittez cette page.",
+    "leave": "Quitter sans enregistrer"
   }
 }

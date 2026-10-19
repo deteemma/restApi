@@ -68,7 +68,11 @@
     "emptyScenarios": "Nessuno scenario",
     "emptyEnvironments": "Nessun ambiente",
     "expand": "Espandi «{{ name }}»",
-    "collapse": "Comprimi «{{ name }}»"
+    "collapse": "Comprimi «{{ name }}»",
+    "move": "Sposta in…",
+    "moveTitle": "Sposta «{{ name }}» in",
+    "noMoveTarget": "Non c'è nessun'altra cartella in cui spostarlo.",
+    "root": "Radice della collezione"
   },
   "dialogs": {
     "renameTitle": "Rinomina «{{ name }}»",
@@ -431,5 +435,10 @@
     "exported": "Collezione esportata.",
     "imported": "Collezione «{{ name }}» importata. Ricorda di reinserire le sue variabili segrete.",
     "invalidFile": "Questo file non è un JSON leggibile."
+  },
+  "unsaved": {
+    "title": "Modifiche non salvate",
+    "message": "Le modifiche andranno perse se lasci questa pagina.",
+    "leave": "Esci senza salvare"
   }
 }

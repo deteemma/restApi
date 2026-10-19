@@ -25,6 +25,11 @@ import { Dialogs } from '../shared/ui/dialogs';
 import { VariablesEditor, type VariablesChange } from '../shared/variables/variables-editor';
 import { AuthEditor } from '../requests/auth-editor';
 import { HttpSettingsEditor } from '../requests/http-settings-editor';
+import {
+  discardUnsavedChanges,
+  type PendingChanges,
+  warnBeforeUnload,
+} from '../shared/unsaved/unsaved-changes.guard';
 
 /** Réglages d'une Collection : nom et Variables par défaut. */
 @Component({
@@ -98,7 +103,7 @@ import { HttpSettingsEditor } from '../requests/http-settings-editor';
     }
   `,
 })
-export class CollectionSettingsPage {
+export class CollectionSettingsPage implements PendingChanges {
   /** Paramètre de route (hérité de la route parente). */
   readonly collectionId = input.required<string>();
 
@@ -125,6 +130,7 @@ export class CollectionSettingsPage {
   );
 
   constructor() {
+    warnBeforeUnload(this);
     effect(() => {
       const c = this.collection.value();
       if (!c) return;
@@ -139,6 +145,10 @@ export class CollectionSettingsPage {
       const error = this.collection.error();
       if (error) this.notifier.error(error);
     });
+  }
+
+  hasUnsavedChanges(): boolean {
+    return this.dirty();
   }
 
   protected setName(name: string): void {
@@ -190,7 +200,7 @@ export class CollectionSettingsPage {
     if (!confirmed) return;
     try {
       await this.store.deleteCollection(id);
-      await this.router.navigate(['/']);
+      await this.router.navigate(['/'], discardUnsavedChanges);
     } catch (e) {
       this.notifier.error(e);
     }

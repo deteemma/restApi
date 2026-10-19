@@ -97,6 +97,12 @@ export class WorkspaceStore {
     await this.refreshTree();
   }
 
+  /** Déplace un Dossier sous un autre Dossier, ou à la racine avec `null`. */
+  async moveFolder(id: string, parentId: string | null) {
+    await this.api.updateFolder(id, { parentId });
+    await this.refreshTree();
+  }
+
   async deleteFolder(id: string) {
     await this.api.deleteFolder(id);
     await this.refreshTree();
@@ -122,9 +128,12 @@ export class WorkspaceStore {
   }
 
   async renameRequest(id: string, name: string) {
-    const { id: _id, collectionId: _c, ...input } = await this.api.getRequest(id);
-    await this.api.updateRequest(id, { ...input, name });
-    await this.refreshTree();
+    await this.changeRequest(id, { name });
+  }
+
+  /** Déplace une Requête dans un Dossier, ou à la racine avec `null`. */
+  async moveRequest(id: string, folderId: string | null) {
+    await this.changeRequest(id, { folderId });
   }
 
   /** Rejette avec REQUEST_IN_USE si des Scénarios l'utilisent, sauf avec `force`. */
@@ -180,6 +189,13 @@ export class WorkspaceStore {
   }
 
   // ---------------------------------------------------------------------------
+
+  /** Modifie une partie d'une Requête : l'API attend sa définition complète. */
+  private async changeRequest(id: string, change: Partial<RequestInput>) {
+    const { id: _id, collectionId: _c, ...input } = await this.api.getRequest(id);
+    await this.api.updateRequest(id, { ...input, ...change });
+    await this.refreshTree();
+  }
 
   private requireCollection(): string {
     const id = this.collectionId();

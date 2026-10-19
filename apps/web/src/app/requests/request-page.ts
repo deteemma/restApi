@@ -33,6 +33,7 @@ import { AuthEditor } from './auth-editor';
 import { HttpSettingsEditor } from './http-settings-editor';
 import { changeBodyType, draftFrom, prettyJson, sameDraft, type BodyType } from './request-draft';
 import { ResponseViewer } from './response-viewer';
+import { type PendingChanges, warnBeforeUnload } from '../shared/unsaved/unsaved-changes.guard';
 
 /**
  * Éditeur de Requête : le brouillon se modifie librement, s'envoie tel quel (« Envoyer ») et ne
@@ -65,7 +66,7 @@ import { ResponseViewer } from './response-viewer';
     '(keydown.meta.s)': 'save($event)',
   },
 })
-export class RequestPage {
+export class RequestPage implements PendingChanges {
   /** Paramètres de route. */
   readonly requestId = input.required<string>();
   readonly collectionId = input.required<string>();
@@ -114,6 +115,7 @@ export class RequestPage {
   );
 
   constructor() {
+    warnBeforeUnload(this);
     effect(() => {
       const request = this.request.value();
       if (!request) return;
@@ -129,6 +131,10 @@ export class RequestPage {
       const error = this.request.error() ?? this.sendsResource.error();
       if (error) this.notifier.error(error);
     });
+  }
+
+  hasUnsavedChanges(): boolean {
+    return this.dirty();
   }
 
   /** Modifie une partie du brouillon. */

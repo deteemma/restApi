@@ -2,19 +2,23 @@ import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { ErrorCode, type RequestInUseDetails } from '@restapi/shared';
+import { firstValueFrom } from 'rxjs';
 import { apiErrorCode, apiErrorDetails } from '../../core/api-error';
 import { Notifier } from '../../core/notifier';
 import { WorkspaceStore } from '../../core/workspace.store';
 import { Dialogs } from '../../shared/ui/dialogs';
 import { MethodBadge } from '../../shared/ui/method-badge';
+import { discardUnsavedChanges } from '../../shared/unsaved/unsaved-changes.guard';
 import { ScenarioDnd } from '../../scenarios/scenario-dnd';
-import { buildRequestTree } from '../request-tree';
+import { buildRequestTree, moveTargets, type MovableItem } from '../request-tree';
+import { MoveDialog, type MoveDialogData } from './move-dialog';
 
 type Kind = 'folder' | 'request' | 'scenario' | 'environment';
 
@@ -44,6 +48,7 @@ export class CollectionTree {
   protected readonly dnd = inject(ScenarioDnd);
   protected readonly noDropHere = () => false;
   private readonly dialogs = inject(Dialogs);
+  private readonly dialog = inject(MatDialog);
   private readonly notifier = inject(Notifier);
   private readonly router = inject(Router);
 
@@ -139,6 +144,22 @@ export class CollectionTree {
     });
   }
 
+  /** Déplace un Dossier ou une Requête vers un autre Dossier, ou à la racine. */
+  protected async move(kind: MovableItem['kind'], id: string, name: string): Promise<void> {
+    const tree = this.store.tree();
+    if (!tree) return;
+    const data: MoveDialogData = { name, targets: moveTargets(tree, { kind, id }) };
+    const target = await firstValueFrom(
+      this.dialog.open(MoveDialog, { data, autoFocus: 'dialog' }).afterClosed(),
+    );
+    if (target === undefined) return;
+    await this.run(async () => {
+      if (target) this.expand(target);
+      if (kind === 'folder') await this.store.moveFolder(id, target);
+      else await this.store.moveRequest(id, target);
+    });
+  }
+
   protected async remove(kind: Kind, id: string, name: string): Promise<void> {
     const confirmed = await this.dialogs.confirm({
       title: 'dialogs.deleteTitle',
@@ -164,7 +185,10 @@ export class CollectionTree {
       }
       // Si l'élément supprimé était ouvert, on revient aux réglages de la Collection.
       if (this.router.url.includes(`/${id}`)) {
-        await this.router.navigate(['/collections', this.store.collectionId()]);
+        await this.router.navigate(
+          ['/collections', this.store.collectionId()],
+          discardUnsavedChanges,
+        );
       }
     });
   }

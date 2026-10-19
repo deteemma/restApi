@@ -1,5 +1,6 @@
 import type { Routes } from '@angular/router';
 import { HomePage } from './home/home-page';
+import { unsavedChangesGuard } from './shared/unsaved/unsaved-changes.guard';
 
 // Pages chargées à la demande : le paquet initial ne contient que la coquille et l'accueil.
 export const routes: Routes = [
@@ -12,14 +13,17 @@ export const routes: Routes = [
         path: '',
         loadComponent: () =>
           import('./collections/collection-settings-page').then((m) => m.CollectionSettingsPage),
+        canDeactivate: [unsavedChangesGuard],
       },
       {
         path: 'requests/:requestId',
         loadComponent: () => import('./requests/request-page').then((m) => m.RequestPage),
+        canDeactivate: [unsavedChangesGuard],
       },
       {
         path: 'scenarios/:scenarioId',
         loadComponent: () => import('./scenarios/scenario-page').then((m) => m.ScenarioPage),
+        canDeactivate: [unsavedChangesGuard],
       },
       {
         path: 'runs',
@@ -37,6 +41,7 @@ export const routes: Routes = [
         path: 'environments/:environmentId',
         loadComponent: () =>
           import('./environments/environment-page').then((m) => m.EnvironmentPage),
+        canDeactivate: [unsavedChangesGuard],
       },
     ],
   },

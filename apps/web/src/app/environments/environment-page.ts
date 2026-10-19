@@ -19,6 +19,7 @@ import { Notifier } from '../core/notifier';
 import { WorkspaceStore } from '../core/workspace.store';
 import { VariablesEditor, type VariablesChange } from '../shared/variables/variables-editor';
 import { unchangedInputs } from '../shared/variables/variables-model';
+import { type PendingChanges, warnBeforeUnload } from '../shared/unsaved/unsaved-changes.guard';
 
 /** Édition d'un Environnement : nom et Variables. */
 @Component({
@@ -83,7 +84,7 @@ import { unchangedInputs } from '../shared/variables/variables-model';
     }
   `,
 })
-export class EnvironmentPage {
+export class EnvironmentPage implements PendingChanges {
   /** Paramètre de route. */
   readonly environmentId = input.required<string>();
 
@@ -106,6 +107,7 @@ export class EnvironmentPage {
   );
 
   constructor() {
+    warnBeforeUnload(this);
     effect(() => {
       const env = this.environment.value();
       if (!env) return;
@@ -118,6 +120,10 @@ export class EnvironmentPage {
       const error = this.environment.error();
       if (error) this.notifier.error(error);
     });
+  }
+
+  hasUnsavedChanges(): boolean {
+    return this.dirty();
   }
 
   protected setName(name: string): void {

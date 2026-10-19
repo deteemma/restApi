@@ -87,6 +87,37 @@ describe('WorkspaceStore', () => {
     expect(sent[0]!.body).toMatchObject({ name: 'Lister', folderId: 'f1', method: 'GET', url: '' });
   });
 
+  it('déplace un Dossier vers la racine, puis recharge l’arborescence', async () => {
+    await open();
+    const sent = await settle(store.moveFolder('f2', null), {
+      'PATCH /api/folders/f2': {},
+      'GET /api/collections/c1/tree': tree(),
+    });
+    expect(sent.map((r) => r.method)).toEqual(['PATCH', 'GET']);
+    expect(sent[0]!.body).toEqual({ parentId: null });
+  });
+
+  it('déplace une Requête dans un Dossier en gardant tout le reste de sa définition', async () => {
+    await open();
+    const definition = {
+      name: 'Lister',
+      method: 'POST',
+      url: '{{base}}/items',
+      query: [],
+      headers: [{ name: 'Accept', value: 'application/json', enabled: true }],
+      body: { type: 'json', content: '{}' },
+      auth: { type: 'inherit' },
+      assertions: [],
+      settings: { timeoutMs: 5000 },
+    };
+    const sent = await settle(store.moveRequest('r1', 'f1'), {
+      'GET /api/requests/r1': { id: 'r1', collectionId: 'c1', folderId: null, ...definition },
+      'PUT /api/requests/r1': {},
+      'GET /api/collections/c1/tree': tree(),
+    });
+    expect(sent.find((r) => r.method === 'PUT')!.body).toEqual({ ...definition, folderId: 'f1' });
+  });
+
   it('renomme un Environnement sans jamais renvoyer ses valeurs secrètes', async () => {
     await open();
     const sent = await settle(store.renameEnvironment('e1', 'production'), {

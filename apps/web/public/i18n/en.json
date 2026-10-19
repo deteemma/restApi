@@ -68,7 +68,11 @@
     "emptyScenarios": "No scenarios",
     "emptyEnvironments": "No environments",
     "expand": "Expand “{{ name }}”",
-    "collapse": "Collapse “{{ name }}”"
+    "collapse": "Collapse “{{ name }}”",
+    "move": "Move to…",
+    "moveTitle": "Move “{{ name }}” to",
+    "noMoveTarget": "There is no other folder to move it to.",
+    "root": "Collection root"
   },
   "dialogs": {
     "renameTitle": "Rename “{{ name }}”",
@@ -431,5 +435,10 @@
     "exported": "Collection exported.",
     "imported": "Collection “{{ name }}” imported. Remember to enter its secret variables again.",
     "invalidFile": "This file is not readable JSON."
+  },
+  "unsaved": {
+    "title": "Unsaved changes",
+    "message": "Your changes will be lost if you leave this page.",
+    "leave": "Leave without saving"
   }
 }

@@ -198,6 +198,11 @@
     <button mat-menu-item (click)="rename(kind, id, name)">
       <mat-icon>edit</mat-icon>{{ 'common.rename' | transloco }}
     </button>
+    @if (kind === 'folder' || kind === 'request') {
+      <button mat-menu-item (click)="move(kind, id, name)">
+        <mat-icon>drive_file_move</mat-icon>{{ 'tree.move' | transloco }}
+      </button>
+    }
     <button mat-menu-item (click)="remove(kind, id, name)">
       <mat-icon>delete</mat-icon>{{ 'common.delete' | transloco }}
     </button>

@@ -37,6 +37,7 @@ import { StepProperties } from './editor/step-properties';
 import { StepResult } from './editor/step-result';
 import { RunTracker } from './run-tracker';
 import { findStep, updateStep } from './scenario-tree';
+import { type PendingChanges, warnBeforeUnload } from '../shared/unsaved/unsaved-changes.guard';
 
 /** Délai avant de recalculer les Anomalies du brouillon, après la dernière modification. */
 const ISSUES_DEBOUNCE_MS = 400;
@@ -65,7 +66,7 @@ const ISSUES_DEBOUNCE_MS = 400;
   styleUrl: './scenario-page.scss',
   host: { '(keydown.control.s)': 'save($event)', '(keydown.meta.s)': 'save($event)' },
 })
-export class ScenarioPage {
+export class ScenarioPage implements PendingChanges {
   /** Paramètres de route. */
   readonly scenarioId = input.required<string>();
   readonly collectionId = input.required<string>();
@@ -121,6 +122,7 @@ export class ScenarioPage {
   });
 
   constructor() {
+    warnBeforeUnload(this);
     effect(() => {
       const scenario = this.scenario.value();
       if (!scenario) return;
@@ -156,6 +158,10 @@ export class ScenarioPage {
     inject(DestroyRef).onDestroy(() => clearTimeout(timer));
   }
 
+  hasUnsavedChanges(): boolean {
+    return this.dirty();
+  }
+
   protected setRoot(root: GroupStep): void {
     this.draft.update((d) => (d ? { ...d, root } : d));
   }
@@ -176,8 +182,9 @@ export class ScenarioPage {
     if (!draft) return false;
     if (!this.dirty()) return true;
     try {
-      const updated = await this.api.updateScenario(this.scenarioId(), draft);
-      this.saved.set(JSON.stringify({ name: updated.name, root: updated.root }));
+      await this.api.updateScenario(this.scenarioId(), draft);
+      // Comparaison avec le brouillon envoyé : la réponse du serveur peut ordonner autrement ses clés.
+      this.saved.set(JSON.stringify(draft));
       this.notifier.success('scenarioEditor.saved');
       return true;
     } catch (e) {

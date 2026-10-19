@@ -20,6 +20,8 @@ describe('brouillon de Requête', () => {
   it('retire les identifiants et compare par contenu', () => {
     const draft = draftFrom(dto);
     expect(draft).not.toHaveProperty('id');
+    // Le Dossier se change depuis l'arborescence : l'enregistrement de l'éditeur n'y touche pas.
+    expect(draft).not.toHaveProperty('folderId');
     expect(sameDraft(draft, { ...draft })).toBe(true);
     expect(sameDraft(draft, { ...draft, url: 'x' })).toBe(false);
     expect(sameDraft(draft, { ...draft, settings: {} })).toBe(true);

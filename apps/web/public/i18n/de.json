@@ -68,7 +68,11 @@
     "emptyScenarios": "Keine Szenarien",
     "emptyEnvironments": "Keine Umgebungen",
     "expand": "„{{ name }}“ aufklappen",
-    "collapse": "„{{ name }}“ zuklappen"
+    "collapse": "„{{ name }}“ zuklappen",
+    "move": "Verschieben nach…",
+    "moveTitle": "„{{ name }}“ verschieben nach",
+    "noMoveTarget": "Es gibt keinen anderen Ordner, in den es verschoben werden kann.",
+    "root": "Stammebene der Sammlung"
   },
   "dialogs": {
     "renameTitle": "„{{ name }}“ umbenennen",
@@ -431,5 +435,10 @@
     "exported": "Sammlung exportiert.",
     "imported": "Sammlung „{{ name }}“ importiert. Geben Sie ihre geheimen Variablen erneut ein.",
     "invalidFile": "Diese Datei ist kein lesbares JSON."
+  },
+  "unsaved": {
+    "title": "Nicht gespeicherte Änderungen",
+    "message": "Ihre Änderungen gehen verloren, wenn Sie diese Seite verlassen.",
+    "leave": "Ohne Speichern verlassen"
   }
 }
