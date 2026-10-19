@@ -428,3 +428,66 @@ describe('Envois', () => {
     expect(await t.connection.db!.collection('sends').countDocuments()).toBe(0);
   });
 });
+
+describe('évaluation dans l’éditeur', () => {
+  const response = {
+    status: 201,
+    statusText: 'Created',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ id: 7, owner: SECRET, tags: ['a'] }),
+    durationMs: 42,
+  };
+
+  it('évalue les Assertions comme le moteur, avec les Variables de l’Environnement', async () => {
+    const { cid, envId } = await setup();
+    const res = await t.http
+      .post(`/api/collections/${cid}/evaluate`)
+      .send({
+        environmentId: envId,
+        response,
+        assertions: [
+          { target: { type: 'status' }, operator: 'equals', expected: '201' },
+          { target: { type: 'jsonPath', path: '$.tags' }, operator: 'contains', expected: 'b' },
+          { target: { type: 'duration' }, operator: 'lt', expected: '{{missing}}' },
+        ],
+        extractions: [{ variable: 'id', source: { type: 'jsonPath', path: '$.id' } }],
+      })
+      .expect(200);
+
+    expect(res.body.assertions.map((a: { passed: boolean }) => a.passed)).toEqual([
+      true,
+      false,
+      false,
+    ]);
+    expect(res.body.assertions[1].actual).toEqual(['a']);
+    expect(res.body.assertions[2].error).toEqual({ code: 'UNKNOWN_VARIABLE', detail: 'missing' });
+    expect(res.body.extractions[0].value).toBe('7');
+  });
+
+  it('masque les valeurs secrètes dans le résultat', async () => {
+    const { cid } = await setup();
+    const res = await t.http
+      .post(`/api/collections/${cid}/evaluate`)
+      .send({
+        response,
+        assertions: [
+          {
+            target: { type: 'jsonPath', path: '$.owner' },
+            operator: 'equals',
+            expected: '{{token}}',
+          },
+        ],
+      })
+      .expect(200);
+    expect(res.body.assertions[0].passed).toBe(true);
+    expect(JSON.stringify(res.body)).not.toContain(SECRET);
+  });
+
+  it('refuse une réponse mal formée', async () => {
+    const { cid } = await setup();
+    await t.http
+      .post(`/api/collections/${cid}/evaluate`)
+      .send({ response: { status: 'x' } })
+      .expect(422);
+  });
+});

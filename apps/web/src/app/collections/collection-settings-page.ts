@@ -14,13 +14,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
-import type { VariableInput } from '@restapi/shared';
+import type { CollectionAuth, HttpSettings, RequestAuth, VariableInput } from '@restapi/shared';
 import { ApiClient } from '../core/api-client';
 import { Notifier } from '../core/notifier';
 import { WorkspaceStore } from '../core/workspace.store';
 import { AppDatePipe } from '../shared/ui/app-date.pipe';
 import { Dialogs } from '../shared/ui/dialogs';
 import { VariablesEditor, type VariablesChange } from '../shared/variables/variables-editor';
+import { AuthEditor } from '../requests/auth-editor';
+import { HttpSettingsEditor } from '../requests/http-settings-editor';
 
 /** Réglages d'une Collection : nom et Variables par défaut. */
 @Component({
@@ -33,6 +35,8 @@ import { VariablesEditor, type VariablesChange } from '../shared/variables/varia
     TranslocoPipe,
     AppDatePipe,
     VariablesEditor,
+    AuthEditor,
+    HttpSettingsEditor,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: '../shared/ui/page.scss',
@@ -56,6 +60,16 @@ import { VariablesEditor, type VariablesChange } from '../shared/variables/varia
       <h2>{{ 'variables.title' | transloco }}</h2>
       <p class="hint">{{ 'collectionSettings.variablesHint' | transloco }}</p>
       <app-variables-editor [variables]="c.variables" (changed)="onVariables($event)" />
+
+      <h2>{{ 'collectionSettings.auth' | transloco }}</h2>
+      <p class="hint">{{ 'collectionSettings.authHint' | transloco }}</p>
+      <app-auth-editor [auth]="auth() ?? c.auth" (authChange)="setAuth($event)" />
+
+      <h2>{{ 'collectionSettings.http' | transloco }}</h2>
+      <app-http-settings-editor
+        [settings]="settings() ?? c.settings"
+        (settingsChange)="setSettings($event)"
+      />
 
       <div class="actions">
         <button mat-flat-button (click)="save()" [disabled]="!canSave()">
@@ -91,6 +105,8 @@ export class CollectionSettingsPage {
   protected readonly name = signal('');
   private readonly variables = signal<VariableInput[] | null>(null);
   private readonly variablesValid = signal(true);
+  protected readonly auth = signal<CollectionAuth | null>(null);
+  protected readonly settings = signal<Partial<HttpSettings> | null>(null);
   protected readonly dirty = signal(false);
   protected readonly canSave = computed(
     () => this.dirty() && this.variablesValid() && this.name().trim() !== '',
@@ -102,6 +118,8 @@ export class CollectionSettingsPage {
       if (!c) return;
       this.name.set(c.name);
       this.variables.set(null);
+      this.auth.set(null);
+      this.settings.set(null);
       this.variablesValid.set(true);
       this.dirty.set(false);
     });
@@ -113,6 +131,18 @@ export class CollectionSettingsPage {
 
   protected setName(name: string): void {
     this.name.set(name);
+    this.dirty.set(true);
+  }
+
+  protected setAuth(auth: RequestAuth): void {
+    // Une Collection n'hérite de rien : l'éditeur ne propose pas « hériter ».
+    if (auth.type === 'inherit') return;
+    this.auth.set(auth);
+    this.dirty.set(true);
+  }
+
+  protected setSettings(settings: Partial<HttpSettings>): void {
+    this.settings.set(settings);
     this.dirty.set(true);
   }
 
@@ -128,6 +158,8 @@ export class CollectionSettingsPage {
       const updated = await this.store.updateCollection(this.collectionId(), {
         name: this.name().trim(),
         ...(variables ? { variables } : {}),
+        ...(this.auth() ? { auth: this.auth()! } : {}),
+        ...(this.settings() ? { settings: this.settings()! } : {}),
       });
       this.collection.set(updated);
       this.notifier.success('collectionSettings.saved');

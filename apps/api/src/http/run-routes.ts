@@ -3,7 +3,7 @@ import type { RunDto, RunEvent } from '@restapi/shared';
 import type { RunManager } from '../runs/run-manager';
 import type { Store } from '../store/store';
 import { parse } from './parse';
-import { runInput, runListQuery, runPatch, sendInput } from './schemas';
+import { evaluateInput, runInput, runListQuery, runPatch, sendInput } from './schemas';
 
 const owner = (res: Response) => res.locals['owner'] as string;
 const param = (req: Request, name: string) => String(req.params[name]);
@@ -91,6 +91,11 @@ export function runRoutes(store: Store, manager: RunManager): Router {
   r.get('/requests/:id/sends', async (req, res) => {
     await store.requests.get(owner(res), param(req, 'id')); // 404 si la Requête n'existe pas
     res.json(await store.sends.list(owner(res), param(req, 'id')));
+  });
+
+  r.post('/collections/:id/evaluate', async (req, res) => {
+    const input = parse(evaluateInput, req.body);
+    res.json(await manager.evaluate(owner(res), param(req, 'id'), input));
   });
 
   return r;

@@ -50,7 +50,9 @@
     "name": "Nome",
     "loading": "Caricamento…",
     "unsaved": "Modifiche non salvate",
-    "unexpectedError": "Si è verificato un errore imprevisto."
+    "unexpectedError": "Si è verificato un errore imprevisto.",
+    "yes": "Sì",
+    "no": "No"
   },
   "tree": {
     "requests": "Richieste",
@@ -102,7 +104,10 @@
     "variablesHint": "Valori predefiniti, utilizzabili in ogni richiesta. Un ambiente può sostituirli.",
     "saved": "Collezione salvata.",
     "delete": "Elimina la collezione",
-    "updated": "Modificata il {{ date }}"
+    "updated": "Modificata il {{ date }}",
+    "auth": "Autenticazione",
+    "authHint": "Usata da tutte le richieste impostate su «Eredita dalla collezione».",
+    "http": "Impostazioni HTTP"
   },
   "environmentPage": {
     "title": "Ambiente",
@@ -113,10 +118,195 @@
     "activate": "Usa questo ambiente"
   },
   "requestPage": {
-    "placeholder": "L'editor delle richieste sarà presto disponibile."
+    "method": "Metodo",
+    "url": "URL",
+    "urlPlaceholder": "URL, ad esempio",
+    "send": "Invia",
+    "sendShortcut": "Ctrl + Invio",
+    "saveShortcut": "Ctrl + S",
+    "revert": "Annulla le modifiche",
+    "saved": "Richiesta salvata.",
+    "tabs": {
+      "params": "Parametri ({{ count }})",
+      "headers": "Intestazioni ({{ count }})",
+      "body": "Corpo",
+      "auth": "Autenticazione",
+      "assertions": "Asserzioni ({{ count }})",
+      "settings": "Impostazioni"
+    },
+    "addParam": "Aggiungi un parametro",
+    "headerName": "Nome dell'intestazione",
+    "addHeader": "Aggiungi un'intestazione",
+    "bodyType": "Tipo di corpo",
+    "bodyTypes": {
+      "none": "Nessuno",
+      "json": "JSON",
+      "text": "Testo",
+      "xml": "XML",
+      "form": "Modulo (urlencoded)"
+    },
+    "format": "Formatta",
+    "bodyIgnored": "Il corpo non viene inviato con GET o HEAD.",
+    "noBody": "Questa richiesta non invia un corpo.",
+    "addField": "Aggiungi un campo"
   },
   "scenarioPage": {
     "placeholder": "L'editor degli scenari sarà presto disponibile.",
     "steps": "{{ count }} passo/i al primo livello"
+  },
+  "keyValue": {
+    "enabled": "Invia questa riga",
+    "name": "Nome",
+    "value": "Valore",
+    "remove": "Rimuovi la riga",
+    "add": "Aggiungi una riga"
+  },
+  "auth": {
+    "type": "Tipo di autenticazione",
+    "types": {
+      "inherit": "Eredita dalla collezione",
+      "none": "Nessuna",
+      "basic": "Basic",
+      "bearer": "Bearer (token)",
+      "apiKey": "Chiave API"
+    },
+    "inheritHint": "La richiesta usa l'autenticazione definita nelle impostazioni della collezione.",
+    "username": "Utente",
+    "password": "Password",
+    "token": "Token",
+    "keyName": "Nome della chiave",
+    "keyValue": "Valore della chiave",
+    "keyIn": "Posizione",
+    "inHeader": "Intestazione",
+    "inQuery": "Parametro URL",
+    "secretHint": "Per un segreto, usa una variabile segreta: il suo valore resta cifrato e mascherato. Ad esempio:"
+  },
+  "settings": {
+    "timeout": "Timeout",
+    "inherited": "Collezione: {{ value }}",
+    "followRedirects": "Segui i reindirizzamenti",
+    "ignoreTlsErrors": "Ignora i certificati TLS non validi",
+    "inheritChoice": "Come la collezione ({{ value }})"
+  },
+  "assertions": {
+    "add": "Aggiungi un'asserzione",
+    "evaluate": "Valuta",
+    "evaluateHint": "Valuta le asserzioni sulla risposta visualizzata",
+    "evaluateDisabled": "Invia prima la richiesta per ottenere una risposta",
+    "empty": "Nessuna asserzione: il passo riesce se lo stato HTTP è 2xx.",
+    "target": "Obiettivo",
+    "operator": "Operatore",
+    "expected": "Valore atteso",
+    "remove": "Rimuovi l'asserzione",
+    "found": "Valore trovato:",
+    "notFound": "Niente trovato in questo punto della risposta.",
+    "help": {
+      "toggle": "Aiuto",
+      "title": "Aiuto sulle asserzioni",
+      "intro": "Un'asserzione confronta una parte della risposta con un valore atteso. Il valore atteso può contenere variabili, ad esempio:",
+      "targets": "Obiettivi",
+      "operators": "Operatori",
+      "meaning": "Significato",
+      "example": "Esempio",
+      "jsonPath": "Percorsi JSON",
+      "noAssertion": "Senza asserzioni, un passo riesce non appena lo stato HTTP è compreso tra 200 e 299."
+    },
+    "targets": {
+      "status": {
+        "label": "Stato HTTP",
+        "description": "Il codice di stato della risposta, ad esempio 200 o 404."
+      },
+      "header": {
+        "label": "Intestazione",
+        "description": "Il valore di un'intestazione della risposta (il nome non distingue maiuscole e minuscole)."
+      },
+      "jsonPath": {
+        "label": "Percorso JSON",
+        "description": "Un valore letto nel corpo JSON della risposta. Più risultati danno una lista."
+      },
+      "duration": {
+        "label": "Durata (ms)",
+        "description": "Il tempo di risposta, in millisecondi."
+      }
+    },
+    "operators": {
+      "equals": {
+        "label": "uguale a",
+        "description": "Identico al valore atteso (oggetti e liste si confrontano in JSON)."
+      },
+      "notEquals": {
+        "label": "diverso da",
+        "description": "Presente e diverso dal valore atteso."
+      },
+      "contains": {
+        "label": "contiene",
+        "description": "Il testo contiene il valore, o la lista contiene questo elemento."
+      },
+      "exists": {
+        "label": "esiste",
+        "description": "L'obiettivo è presente nella risposta (anche vuoto o null)."
+      },
+      "notExists": {
+        "label": "non esiste",
+        "description": "L'obiettivo è assente dalla risposta."
+      },
+      "matches": {
+        "label": "corrisponde a (regex)",
+        "description": "Il testo corrisponde all'espressione regolare."
+      },
+      "lt": {
+        "label": "minore di",
+        "description": "Numero strettamente minore."
+      },
+      "lte": {
+        "label": "minore o uguale a",
+        "description": "Numero minore o uguale."
+      },
+      "gt": {
+        "label": "maggiore di",
+        "description": "Numero strettamente maggiore."
+      },
+      "gte": {
+        "label": "maggiore o uguale a",
+        "description": "Numero maggiore o uguale."
+      },
+      "isType": {
+        "label": "è di tipo",
+        "description": "Tipo JSON: string, number, boolean, null, array o object."
+      }
+    },
+    "jsonPath": {
+      "field": "Un campo al primo livello",
+      "nested": "Un campo annidato",
+      "index": "Il primo elemento di una lista (indice 0)",
+      "last": "L'ultimo elemento di una lista",
+      "all": "Questo campo in ogni elemento (dà una lista)",
+      "length": "Il numero di elementi di una lista",
+      "recursive": "Questo campo a qualsiasi profondità",
+      "filter": "Filtrare gli elementi secondo una condizione",
+      "quoted": "Un nome con spazi o caratteri speciali"
+    }
+  },
+  "stepErrors": {
+    "UNKNOWN_VARIABLE": "Variabile sconosciuta",
+    "CIRCULAR_VARIABLE": "Variabili che si richiamano in ciclo",
+    "REQUEST_NOT_FOUND": "Richiesta non trovata",
+    "INVALID_URL": "URL non valido",
+    "TIMEOUT": "Tempo scaduto",
+    "NETWORK": "Errore di rete",
+    "UNEXPECTED_STATUS": "Stato HTTP diverso da 2xx",
+    "ASSERTION_FAILED": "Asserzione non verificata",
+    "EXTRACTION_FAILED": "Valore da estrarre non trovato"
+  },
+  "response": {
+    "title": "Risposta",
+    "sizeBytes": "{{ value }} B",
+    "sizeKb": "{{ value }} KB",
+    "history": "Invii precedenti",
+    "truncated": "Corpo troncato a 1 MB.",
+    "body": "Corpo",
+    "headers": "Intestazioni ({{ count }})",
+    "sent": "Richiesta inviata",
+    "empty": "Invia la richiesta per vederne la risposta."
   }
 }

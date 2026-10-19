@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
+    "prestart": "node scripts/copy-monaco.mjs",
     "start": "ng serve",
+    "prebuild": "node scripts/copy-monaco.mjs",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test --watch=false",
@@ -23,6 +25,7 @@
     "@jsverse/transloco": "^8.4.0",
     "@restapi/shared": "*",
     "material-symbols": "^0.48.0",
+    "monaco-editor": "^0.57.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },

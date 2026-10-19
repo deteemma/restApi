@@ -1,0 +1,97 @@
+<div class="header">
+  <h2>{{ 'response.title' | transloco }}</h2>
+  @if (send(); as s) {
+    @if (response(); as r) {
+      <span class="status" [class]="statusClass()">{{ r.status }} {{ r.statusText }}</span>
+      <span class="metric">{{ r.durationMs }} ms</span>
+      <span class="metric">{{ size().key | transloco: { value: size().value } }}</span>
+    } @else if (s.result.error) {
+      <span class="status error">{{ 'stepErrors.' + s.result.error.code | transloco }}</span>
+    }
+    <span class="spacer"></span>
+    @if (sends().length > 1) {
+      <mat-select
+        class="history"
+        [value]="s.id"
+        (valueChange)="selectedIdChange.emit($event)"
+        [aria-label]="'response.history' | transloco"
+      >
+        @for (item of sends(); track item.id) {
+          <mat-option [value]="item.id">
+            {{ item.at | appDate: 'short' }} —
+            {{
+              item.result.response?.status ?? ('stepErrors.' + item.result.error?.code | transloco)
+            }}
+            @if (item.environmentName) {
+              ({{ item.environmentName }})
+            }
+          </mat-option>
+        }
+      </mat-select>
+    }
+  }
+</div>
+
+@if (sending()) {
+  <mat-progress-bar mode="indeterminate" />
+}
+
+@if (send(); as s) {
+  @if (s.result.error && s.result.error.detail) {
+    <p class="error-detail">
+      <mat-icon>error_outline</mat-icon>
+      {{ 'stepErrors.' + s.result.error.code | transloco }} —
+      <code>{{ s.result.error.detail }}</code>
+    </p>
+  }
+  <mat-tab-group animationDuration="0ms" mat-stretch-tabs="false">
+    @if (response(); as r) {
+      <mat-tab [label]="'response.body' | transloco">
+        @if (r.bodyTruncated) {
+          <p class="note">{{ 'response.truncated' | transloco }}</p>
+        }
+        <app-code-editor
+          class="body"
+          [value]="body().text"
+          [language]="body().language"
+          [readOnly]="true"
+          [ariaLabel]="'response.body' | transloco"
+        />
+      </mat-tab>
+      <mat-tab [label]="'response.headers' | transloco: { count: (r.headers | keyvalue).length }">
+        <table class="kv">
+          <tbody>
+            @for (h of r.headers | keyvalue; track h.key) {
+              <tr>
+                <th scope="row">{{ h.key }}</th>
+                <td>{{ h.value }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </mat-tab>
+    }
+    @if (s.result.request; as sent) {
+      <mat-tab [label]="'response.sent' | transloco">
+        <p class="sent-line">
+          <strong>{{ sent.method }}</strong> <code>{{ sent.url }}</code>
+        </p>
+        <table class="kv">
+          <tbody>
+            @for (h of sent.headers | keyvalue; track h.key) {
+              <tr>
+                <th scope="row">{{ h.key }}</th>
+                <td>{{ h.value }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+        @if (sent.body) {
+          <pre class="sent-body">{{ sent.body }}</pre>
+        }
+      </mat-tab>
+    }
+  </mat-tab-group>
+} @else if (!sending()) {
+  <p class="empty">{{ 'response.empty' | transloco }}</p>
+}

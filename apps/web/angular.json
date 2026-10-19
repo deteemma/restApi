@@ -27,6 +27,11 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": ".monaco",
+                "output": "monaco"
               }
             ],
             "styles": ["material-symbols/outlined.css", "src/styles.scss"]

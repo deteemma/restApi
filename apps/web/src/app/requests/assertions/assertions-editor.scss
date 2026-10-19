@@ -1,0 +1,122 @@
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.layout {
+  display: grid;
+  gap: 16px;
+
+  &.with-help {
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 380px);
+  }
+
+  // Sans cela, la colonne des Assertions refuse de rétrécir et passe sous le panneau d'aide.
+  > * {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 1100px) {
+  .layout.with-help {
+    grid-template-columns: 1fr;
+  }
+}
+
+.empty {
+  margin: 0;
+  font: var(--mat-sys-body-small);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.row {
+  display: grid;
+  grid-template-columns:
+    minmax(110px, 150px) minmax(70px, 1fr) minmax(120px, 170px) minmax(70px, 1fr)
+    auto;
+  gap: 4px 8px;
+  align-items: center;
+  padding: 4px 6px;
+  margin-bottom: 4px;
+  border-left: 3px solid transparent;
+  border-radius: 6px;
+
+  &.passed {
+    border-left-color: light-dark(#1b7f3b, #6fdc8c);
+  }
+
+  &.failed {
+    border-left-color: var(--mat-sys-error);
+  }
+}
+
+mat-select,
+input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 7px 8px;
+  font: var(--mat-sys-body-medium);
+  color: var(--mat-sys-on-surface);
+  background: var(--mat-sys-surface-container-low);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 6px;
+}
+
+.code {
+  font:
+    13px/1.4 ui-monospace,
+    'Cascadia Code',
+    Consolas,
+    monospace;
+}
+
+input:focus {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: -1px;
+}
+
+.result {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font: var(--mat-sys-body-small);
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  code {
+    font:
+      12px ui-monospace,
+      'Cascadia Code',
+      Consolas,
+      monospace;
+    word-break: break-all;
+  }
+}
+
+.passed .result mat-icon {
+  color: light-dark(#1b7f3b, #6fdc8c);
+}
+
+.failed .result mat-icon {
+  color: var(--mat-sys-error);
+}
+
+.help {
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--mat-sys-surface-container);
+  max-height: 520px;
+  overflow: auto;
+}

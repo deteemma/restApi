@@ -5,4 +5,6 @@
 export { runScenario, type RunOptions, type RunResult } from './run-scenario';
 export { validateScenario, type ValidationContext } from './validate-scenario';
 export { executeRequestStep, type RequestStepOutcome } from './request-step';
-export { VariableScope } from './variables';
+export { VariableError, VariableScope } from './variables';
+export { evaluateAssertion } from './assertions';
+export { runExtraction } from './extractions';

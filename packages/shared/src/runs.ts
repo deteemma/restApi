@@ -2,7 +2,19 @@
  * Objets échangés avec l'API d'exécution (L3) : Exécutions et Envois.
  */
 import type { RequestInput } from './api';
-import type { RequestStepResult, RunEvent, RunSnapshot, RunStatus, StepStatus } from './model';
+import type {
+  Assertion,
+  AssertionResult,
+  Extraction,
+  ExtractionResult,
+  ReceivedResponse,
+  RequestStepResult,
+  RunEvent,
+  RunSnapshot,
+  RunStatus,
+  StepError,
+  StepStatus,
+} from './model';
 
 export type FinalStepStatus = Exclude<StepStatus, 'pending' | 'running'>;
 
@@ -69,6 +81,24 @@ export interface SendDto {
   environmentName: string | null;
   status: 'succeeded' | 'failed';
   result: RequestStepResult;
+}
+
+/** Évaluer des Assertions ou des Extractions sur une réponse déjà reçue (bouton « Évaluer »). */
+export interface EvaluateInput {
+  response: ReceivedResponse;
+  assertions?: Assertion[];
+  extractions?: Extraction[];
+  environmentId?: string | null;
+}
+
+/** Résultat d'une Assertion évaluée ; `error` si sa valeur attendue n'a pas pu être résolue. */
+export interface AssertionEvaluation extends AssertionResult {
+  error?: StepError;
+}
+
+export interface EvaluationDto {
+  assertions: AssertionEvaluation[];
+  extractions: ExtractionResult[];
 }
 
 /** Remplace les valeurs secrètes dans tout ce qui est stocké ou diffusé. */

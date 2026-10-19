@@ -50,7 +50,9 @@
     "name": "Nom",
     "loading": "Chargement…",
     "unsaved": "Modifications non enregistrées",
-    "unexpectedError": "Une erreur inattendue s'est produite."
+    "unexpectedError": "Une erreur inattendue s'est produite.",
+    "yes": "Oui",
+    "no": "Non"
   },
   "tree": {
     "requests": "Requêtes",
@@ -102,7 +104,10 @@
     "variablesHint": "Valeurs par défaut, utilisables dans toutes les Requêtes. Un Environnement peut les remplacer.",
     "saved": "Collection enregistrée.",
     "delete": "Supprimer la Collection",
-    "updated": "Modifiée le {{ date }}"
+    "updated": "Modifiée le {{ date }}",
+    "auth": "Authentification",
+    "authHint": "Utilisée par toutes les Requêtes réglées sur « Hériter de la Collection ».",
+    "http": "Réglages HTTP"
   },
   "environmentPage": {
     "title": "Environnement",
@@ -113,10 +118,195 @@
     "activate": "Utiliser cet Environnement"
   },
   "requestPage": {
-    "placeholder": "L'éditeur de Requête sera disponible prochainement."
+    "method": "Méthode",
+    "url": "URL",
+    "urlPlaceholder": "URL, par exemple",
+    "send": "Envoyer",
+    "sendShortcut": "Ctrl + Entrée",
+    "saveShortcut": "Ctrl + S",
+    "revert": "Annuler les modifications",
+    "saved": "Requête enregistrée.",
+    "tabs": {
+      "params": "Paramètres ({{ count }})",
+      "headers": "En-têtes ({{ count }})",
+      "body": "Corps",
+      "auth": "Authentification",
+      "assertions": "Assertions ({{ count }})",
+      "settings": "Réglages"
+    },
+    "addParam": "Ajouter un paramètre",
+    "headerName": "Nom de l'en-tête",
+    "addHeader": "Ajouter un en-tête",
+    "bodyType": "Type de corps",
+    "bodyTypes": {
+      "none": "Aucun",
+      "json": "JSON",
+      "text": "Texte",
+      "xml": "XML",
+      "form": "Formulaire (urlencoded)"
+    },
+    "format": "Formater",
+    "bodyIgnored": "Le corps n'est pas envoyé avec GET ou HEAD.",
+    "noBody": "Cette Requête n'envoie pas de corps.",
+    "addField": "Ajouter un champ"
   },
   "scenarioPage": {
     "placeholder": "L'éditeur de Scénario sera disponible prochainement.",
     "steps": "{{ count }} Étape(s) au premier niveau"
+  },
+  "keyValue": {
+    "enabled": "Envoyer cette ligne",
+    "name": "Nom",
+    "value": "Valeur",
+    "remove": "Retirer la ligne",
+    "add": "Ajouter une ligne"
+  },
+  "auth": {
+    "type": "Type d'authentification",
+    "types": {
+      "inherit": "Hériter de la Collection",
+      "none": "Aucune",
+      "basic": "Basic",
+      "bearer": "Bearer (jeton)",
+      "apiKey": "Clé d'API"
+    },
+    "inheritHint": "La Requête utilise l'authentification définie dans les réglages de la Collection.",
+    "username": "Utilisateur",
+    "password": "Mot de passe",
+    "token": "Jeton",
+    "keyName": "Nom de la clé",
+    "keyValue": "Valeur de la clé",
+    "keyIn": "Emplacement",
+    "inHeader": "En-tête",
+    "inQuery": "Paramètre d'URL",
+    "secretHint": "Pour un secret, utilisez une Variable secrète : sa valeur restera chiffrée et masquée. Par exemple :"
+  },
+  "settings": {
+    "timeout": "Délai maximal",
+    "inherited": "Collection : {{ value }}",
+    "followRedirects": "Suivre les redirections",
+    "ignoreTlsErrors": "Ignorer les certificats TLS invalides",
+    "inheritChoice": "Comme la Collection ({{ value }})"
+  },
+  "assertions": {
+    "add": "Ajouter une Assertion",
+    "evaluate": "Évaluer",
+    "evaluateHint": "Évaluer les Assertions sur la réponse affichée",
+    "evaluateDisabled": "Envoyez d'abord la Requête pour obtenir une réponse",
+    "empty": "Aucune Assertion : l'Étape réussit si le statut HTTP est 2xx.",
+    "target": "Cible",
+    "operator": "Opérateur",
+    "expected": "Valeur attendue",
+    "remove": "Retirer l'Assertion",
+    "found": "Valeur trouvée :",
+    "notFound": "Rien trouvé à cet endroit de la réponse.",
+    "help": {
+      "toggle": "Aide",
+      "title": "Aide sur les Assertions",
+      "intro": "Une Assertion compare une partie de la réponse à une valeur attendue. La valeur attendue peut contenir des Variables, par exemple :",
+      "targets": "Cibles",
+      "operators": "Opérateurs",
+      "meaning": "Signification",
+      "example": "Exemple",
+      "jsonPath": "Chemins JSON",
+      "noAssertion": "Sans Assertion, une Étape réussit dès que le statut HTTP est compris entre 200 et 299."
+    },
+    "targets": {
+      "status": {
+        "label": "Statut HTTP",
+        "description": "Le code de statut de la réponse, par exemple 200 ou 404."
+      },
+      "header": {
+        "label": "En-tête",
+        "description": "La valeur d'un en-tête de réponse (sans tenir compte de la casse du nom)."
+      },
+      "jsonPath": {
+        "label": "Chemin JSON",
+        "description": "Une valeur lue dans le corps JSON de la réponse. Plusieurs résultats donnent une liste."
+      },
+      "duration": {
+        "label": "Durée (ms)",
+        "description": "Le temps de réponse, en millisecondes."
+      }
+    },
+    "operators": {
+      "equals": {
+        "label": "égal à",
+        "description": "Identique à la valeur attendue (un objet ou une liste se compare en JSON)."
+      },
+      "notEquals": {
+        "label": "différent de",
+        "description": "Présent et différent de la valeur attendue."
+      },
+      "contains": {
+        "label": "contient",
+        "description": "Le texte contient la valeur, ou la liste contient cet élément."
+      },
+      "exists": {
+        "label": "existe",
+        "description": "La cible est présente dans la réponse (même vide ou null)."
+      },
+      "notExists": {
+        "label": "n'existe pas",
+        "description": "La cible est absente de la réponse."
+      },
+      "matches": {
+        "label": "correspond à (regex)",
+        "description": "Le texte correspond à l'expression régulière."
+      },
+      "lt": {
+        "label": "inférieur à",
+        "description": "Nombre strictement inférieur."
+      },
+      "lte": {
+        "label": "inférieur ou égal à",
+        "description": "Nombre inférieur ou égal."
+      },
+      "gt": {
+        "label": "supérieur à",
+        "description": "Nombre strictement supérieur."
+      },
+      "gte": {
+        "label": "supérieur ou égal à",
+        "description": "Nombre supérieur ou égal."
+      },
+      "isType": {
+        "label": "est de type",
+        "description": "Type JSON : string, number, boolean, null, array ou object."
+      }
+    },
+    "jsonPath": {
+      "field": "Un champ à la racine",
+      "nested": "Un champ imbriqué",
+      "index": "Le premier élément d'une liste (index 0)",
+      "last": "Le dernier élément d'une liste",
+      "all": "Ce champ dans chaque élément (donne une liste)",
+      "length": "Le nombre d'éléments d'une liste",
+      "recursive": "Ce champ à n'importe quelle profondeur",
+      "filter": "Filtrer les éléments selon une condition",
+      "quoted": "Un nom contenant des espaces ou des caractères spéciaux"
+    }
+  },
+  "stepErrors": {
+    "UNKNOWN_VARIABLE": "Variable inconnue",
+    "CIRCULAR_VARIABLE": "Variables qui se référencent en boucle",
+    "REQUEST_NOT_FOUND": "Requête introuvable",
+    "INVALID_URL": "URL invalide",
+    "TIMEOUT": "Délai dépassé",
+    "NETWORK": "Erreur réseau",
+    "UNEXPECTED_STATUS": "Statut HTTP non 2xx",
+    "ASSERTION_FAILED": "Assertion non vérifiée",
+    "EXTRACTION_FAILED": "Valeur à extraire introuvable"
+  },
+  "response": {
+    "title": "Réponse",
+    "sizeBytes": "{{ value }} o",
+    "sizeKb": "{{ value }} Ko",
+    "history": "Envois précédents",
+    "truncated": "Corps tronqué à 1 Mo.",
+    "body": "Corps",
+    "headers": "En-têtes ({{ count }})",
+    "sent": "Requête envoyée",
+    "empty": "Envoyez la Requête pour voir sa réponse."
   }
 }

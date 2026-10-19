@@ -14,6 +14,10 @@ import type {
   ScenarioDto,
   ScenarioInput,
   ScenarioIssue,
+  EvaluateInput,
+  EvaluationDto,
+  SendDto,
+  SendInput,
 } from '@restapi/shared';
 import { firstValueFrom, type Observable } from 'rxjs';
 
@@ -72,6 +76,20 @@ export class ApiClient {
   deleteRequest(id: string, options: { force?: boolean } = {}) {
     const query = options.force ? '?force=true' : '';
     return this.call(this.http.delete<void>(`/api/requests/${id}${query}`));
+  }
+
+  /** Envoi de la Requête (ou de son brouillon), avec l'Environnement choisi. */
+  sendRequest(id: string, input: SendInput) {
+    return this.call(this.http.post<SendDto>(`/api/requests/${id}/send`, input));
+  }
+  listSends(id: string) {
+    return this.call(this.http.get<SendDto[]>(`/api/requests/${id}/sends`));
+  }
+  /** Évalue des Assertions ou Extractions sur une réponse déjà reçue. */
+  evaluate(collectionId: string, input: EvaluateInput) {
+    return this.call(
+      this.http.post<EvaluationDto>(`/api/collections/${collectionId}/evaluate`, input),
+    );
   }
 
   // Environnements

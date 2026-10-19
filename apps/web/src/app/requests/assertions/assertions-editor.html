@@ -1,0 +1,150 @@
+<div class="toolbar">
+  <button mat-button type="button" (click)="add()">
+    <mat-icon>add</mat-icon>
+    {{ 'assertions.add' | transloco }}
+  </button>
+  <button
+    mat-button
+    type="button"
+    (click)="evaluate.emit()"
+    [disabled]="!canEvaluate() || assertions().length === 0"
+    [matTooltip]="
+      (canEvaluate() ? 'assertions.evaluateHint' : 'assertions.evaluateDisabled') | transloco
+    "
+  >
+    <mat-icon>fact_check</mat-icon>
+    {{ 'assertions.evaluate' | transloco }}
+  </button>
+  <span class="spacer"></span>
+  <button
+    mat-button
+    type="button"
+    (click)="helpOpen.set(!helpOpen())"
+    [attr.aria-expanded]="helpOpen()"
+    aria-controls="assertion-help"
+  >
+    <mat-icon>help_outline</mat-icon>
+    {{ 'assertions.help.toggle' | transloco }}
+  </button>
+</div>
+
+<div class="layout" [class.with-help]="helpOpen()">
+  <div>
+    @if (assertions().length === 0) {
+      <p class="empty">{{ 'assertions.empty' | transloco }}</p>
+    }
+    @for (a of assertions(); track $index; let i = $index) {
+      @let result = resultFor(i);
+      <div class="row" [class.passed]="result?.passed" [class.failed]="result && !result.passed">
+        <mat-select
+          class="target"
+          [value]="a.target.type"
+          (valueChange)="setTarget(i, $event)"
+          [aria-label]="'assertions.target' | transloco"
+        >
+          @for (t of targets; track t.type) {
+            <mat-option
+              [value]="t.type"
+              [matTooltip]="'assertions.targets.' + t.type + '.description' | transloco"
+              matTooltipPosition="right"
+            >
+              {{ 'assertions.targets.' + t.type + '.label' | transloco }}
+            </mat-option>
+          }
+        </mat-select>
+
+        @if (a.target.type === 'header' || a.target.type === 'jsonPath') {
+          <input
+            class="code"
+            [value]="a.target.type === 'header' ? a.target.name : a.target.path"
+            (input)="setTargetText(i, $any($event.target).value)"
+            [placeholder]="a.target.type === 'header' ? 'Content-Type' : '$.items[0].id'"
+            [attr.aria-label]="'assertions.targets.' + a.target.type + '.label' | transloco"
+            spellcheck="false"
+          />
+        } @else {
+          <span></span>
+        }
+
+        <mat-select
+          class="operator"
+          [value]="a.operator"
+          (valueChange)="setOperator(i, $event)"
+          [aria-label]="'assertions.operator' | transloco"
+        >
+          @for (o of operators; track o.operator) {
+            <mat-option
+              [value]="o.operator"
+              [matTooltip]="
+                ('assertions.operators.' + o.operator + '.description' | transloco) +
+                ' — ' +
+                o.example
+              "
+              matTooltipPosition="right"
+            >
+              {{ 'assertions.operators.' + o.operator + '.label' | transloco }}
+            </mat-option>
+          }
+        </mat-select>
+
+        @if (isUnary(a.operator)) {
+          <span></span>
+        } @else if (a.operator === 'isType') {
+          <mat-select
+            class="expected"
+            [value]="a.expected"
+            (valueChange)="setExpected(i, $event)"
+            [aria-label]="'assertions.expected' | transloco"
+          >
+            @for (type of valueTypes; track type) {
+              <mat-option [value]="type">{{ type }}</mat-option>
+            }
+          </mat-select>
+        } @else {
+          <input
+            class="code"
+            [value]="a.expected ?? ''"
+            (input)="setExpected(i, $any($event.target).value)"
+            [placeholder]="'assertions.expected' | transloco"
+            [attr.aria-label]="'assertions.expected' | transloco"
+            spellcheck="false"
+          />
+        }
+
+        <button
+          mat-icon-button
+          type="button"
+          (click)="remove(i)"
+          [attr.aria-label]="'assertions.remove' | transloco"
+          [matTooltip]="'assertions.remove' | transloco"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+
+        @if (result) {
+          <div class="result" role="status">
+            <mat-icon>{{ result.passed ? 'check_circle' : 'cancel' }}</mat-icon>
+            @if (result.error) {
+              <span
+                >{{ 'stepErrors.' + result.error.code | transloco }} {{ result.error.detail }}</span
+              >
+            } @else if ('actual' in result) {
+              <span>
+                {{ 'assertions.found' | transloco }}
+                <code>{{ result.actual | json }}</code>
+              </span>
+            } @else {
+              <span>{{ 'assertions.notFound' | transloco }}</span>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  @if (helpOpen()) {
+    <aside id="assertion-help" class="help">
+      <app-assertion-help />
+    </aside>
+  }
+</div>

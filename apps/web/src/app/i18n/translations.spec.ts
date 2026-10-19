@@ -1,4 +1,4 @@
-import { ErrorCode } from '@restapi/shared';
+import { ErrorCode, StepErrorCode } from '@restapi/shared';
 import deTranslations from '../../../public/i18n/de.json';
 import enTranslations from '../../../public/i18n/en.json';
 import frTranslations from '../../../public/i18n/fr.json';
@@ -59,6 +59,13 @@ describe('complétude des traductions', () => {
       [...flatten(translations[lang]!)].filter(([, v]) => !v.trim()).map(([k]) => `${lang}:${k}`),
     );
     expect(empty).toEqual([]);
+  });
+
+  it("traduit chaque code d'échec d'une Étape", () => {
+    const missing = Object.values(StepErrorCode).filter(
+      (code) => !reference.has(`stepErrors.${code}`),
+    );
+    expect(missing).toEqual([]);
   });
 
   it("traduit chaque code d'erreur de l'API", () => {

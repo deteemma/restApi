@@ -10,6 +10,7 @@ import {
   type RequestAuth,
   type RequestBody,
   type RequestInput,
+  type EvaluateInput,
   type RunInput,
   type RunPatch,
   type SendInput,
@@ -69,7 +70,7 @@ const jsonPath = z.object({ type: z.literal('jsonPath'), path: text(1_000).min(1
 const header = z.object({ type: z.literal('header'), name: text(1_000).min(1) });
 const status = z.object({ type: z.literal('status') });
 
-const assertion = z.object({
+export const assertion = z.object({
   target: z.discriminatedUnion('type', [
     status,
     header,
@@ -78,6 +79,11 @@ const assertion = z.object({
   ]),
   operator: z.enum(ASSERTION_OPERATORS),
   expected: text(10_000).optional(),
+});
+
+const extraction = z.object({
+  variable: variableName,
+  source: z.discriminatedUnion('type', [status, header, jsonPath]),
 });
 
 export const requestInput = z.object({
@@ -109,15 +115,7 @@ const step: z.ZodType<Step> = z.lazy(() =>
           body: body.optional(),
         })
         .optional(),
-      extractions: z
-        .array(
-          z.object({
-            variable: variableName,
-            source: z.discriminatedUnion('type', [status, header, jsonPath]),
-          }),
-        )
-        .max(100)
-        .default([]),
+      extractions: z.array(extraction).max(100).default([]),
     }),
     group,
     z.object({ id: stepId, type: z.literal('pause'), durationMs: z.int().min(0).max(3_600_000) }),
@@ -191,3 +189,17 @@ export const runListQuery = z.object({
   status: z.enum(['running', 'succeeded', 'failed', 'stopped']).optional(),
   limit: z.coerce.number().int().min(1).max(500).optional(),
 });
+
+export const evaluateInput = z.object({
+  response: z.object({
+    status: z.int().min(0).max(999),
+    statusText: z.string().max(1_000),
+    headers: z.record(z.string(), z.string()),
+    body: z.string().max(5_000_000),
+    durationMs: z.number().min(0),
+    bodyTruncated: z.boolean().optional(),
+  }),
+  assertions: z.array(assertion).max(200).optional(),
+  extractions: z.array(extraction).max(100).optional(),
+  environmentId: objectIdLike.nullable().optional(),
+}) satisfies z.ZodType<EvaluateInput>;

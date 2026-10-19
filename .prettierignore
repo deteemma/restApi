@@ -6,3 +6,4 @@ package-lock.json
 .claude
 .agents
 skills-lock.json
+.monaco

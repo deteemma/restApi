@@ -522,6 +522,15 @@ export function createStore(connection: Connection, box: SecretBox) {
       };
     },
 
+    /** Variables d'une Collection et de l'Environnement choisi (évaluation dans l'éditeur). */
+    async collectionContext(
+      owner: string,
+      collectionId: string,
+      environmentId: string | null | undefined,
+    ) {
+      return executionContext(owner, oid(collectionId), environmentId);
+    },
+
     /** Ce qu'il faut pour l'Envoi d'une Requête seule. */
     async requestContext(
       owner: string,

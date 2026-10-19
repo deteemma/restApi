@@ -5,10 +5,21 @@ import {
   type RunInput,
   type RunStats,
   type RunSummaryDto,
+  type AssertionEvaluation,
+  type EvaluateInput,
+  type EvaluationDto,
   type SendDto,
   type SendInput,
 } from '@restapi/shared';
-import { VariableScope, executeRequestStep, runScenario, type RunResult } from '../engine';
+import {
+  VariableError,
+  VariableScope,
+  evaluateAssertion,
+  executeRequestStep,
+  runExtraction,
+  runScenario,
+  type RunResult,
+} from '../engine';
 import { DomainError } from '../errors';
 import type { Store } from '../store/store';
 import { createSanitizer, type Sanitizer } from './sanitize';
@@ -143,6 +154,41 @@ export class RunManager {
       status: outcome.status,
       result: createSanitizer(ctx.secrets).result(outcome.result),
     });
+  }
+
+  /**
+   * Évalue des Assertions et des Extractions sur une réponse déjà reçue, exactement comme le
+   * moteur le ferait pendant une Exécution. Les valeurs secrètes sont masquées dans le résultat.
+   */
+  async evaluate(
+    owner: string,
+    collectionId: string,
+    input: EvaluateInput,
+  ): Promise<EvaluationDto> {
+    const ctx = await this.store.execution.collectionContext(
+      owner,
+      collectionId,
+      input.environmentId,
+    );
+    const scope = VariableScope.root({
+      collection: ctx.collection.variables,
+      environment: ctx.environment?.variables ?? {},
+      parameters: {},
+    });
+    const assertions = (input.assertions ?? []).map((assertion): AssertionEvaluation => {
+      try {
+        return evaluateAssertion(assertion, input.response, scope);
+      } catch (error) {
+        if (!(error instanceof VariableError)) throw error;
+        return {
+          assertion,
+          passed: false,
+          error: { code: error.code, detail: error.names.join(', ') },
+        };
+      }
+    });
+    const extractions = (input.extractions ?? []).map((x) => runExtraction(x, input.response));
+    return createSanitizer(ctx.secrets).value({ assertions, extractions });
   }
 
   private async execute(

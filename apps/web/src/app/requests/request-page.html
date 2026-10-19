@@ -1,0 +1,153 @@
+@if (draft(); as d) {
+  <div class="editor">
+    <div class="title-row">
+      <app-method-badge [method]="d.method" />
+      <h1>{{ d.name }}</h1>
+      @if (dirty()) {
+        <span class="unsaved">{{ 'common.unsaved' | transloco }}</span>
+      }
+    </div>
+
+    <div class="request-line">
+      <mat-select
+        class="method"
+        [value]="d.method"
+        (valueChange)="patch({ method: $event })"
+        [aria-label]="'requestPage.method' | transloco"
+      >
+        @for (m of methods; track m) {
+          <mat-option [value]="m"><app-method-badge [method]="m" /></mat-option>
+        }
+      </mat-select>
+      <input
+        class="url"
+        [value]="d.url"
+        (input)="patch({ url: $any($event.target).value })"
+        [placeholder]="('requestPage.urlPlaceholder' | transloco) + ' ' + urlExample"
+        [attr.aria-label]="'requestPage.url' | transloco"
+        spellcheck="false"
+      />
+      <button
+        mat-flat-button
+        (click)="send()"
+        [disabled]="sending()"
+        [matTooltip]="'requestPage.sendShortcut' | transloco"
+      >
+        <mat-icon>send</mat-icon>
+        {{ 'requestPage.send' | transloco }}
+      </button>
+      <button
+        mat-stroked-button
+        (click)="save()"
+        [disabled]="!dirty()"
+        [matTooltip]="'requestPage.saveShortcut' | transloco"
+      >
+        {{ 'common.save' | transloco }}
+      </button>
+      @if (dirty()) {
+        <button mat-button (click)="revert()">{{ 'requestPage.revert' | transloco }}</button>
+      }
+    </div>
+
+    <mat-tab-group animationDuration="0ms" mat-stretch-tabs="false" class="tabs">
+      <mat-tab [label]="'requestPage.tabs.params' | transloco: { count: d.query.length }">
+        <app-key-value-editor
+          [items]="d.query"
+          (itemsChange)="patch({ query: $event })"
+          addLabel="requestPage.addParam"
+        />
+      </mat-tab>
+
+      <mat-tab [label]="'requestPage.tabs.headers' | transloco: { count: d.headers.length }">
+        <app-key-value-editor
+          [items]="d.headers"
+          (itemsChange)="patch({ headers: $event })"
+          namePlaceholder="requestPage.headerName"
+          addLabel="requestPage.addHeader"
+        />
+      </mat-tab>
+
+      <mat-tab [label]="'requestPage.tabs.body' | transloco">
+        <div class="body-bar">
+          <mat-select
+            class="body-type"
+            [value]="d.body.type"
+            (valueChange)="setBodyType($event)"
+            [aria-label]="'requestPage.bodyType' | transloco"
+          >
+            @for (t of bodyTypes; track t) {
+              <mat-option [value]="t">{{ 'requestPage.bodyTypes.' + t | transloco }}</mat-option>
+            }
+          </mat-select>
+          @if (d.body.type === 'json') {
+            <button mat-button (click)="formatJson()">
+              <mat-icon>format_align_left</mat-icon>
+              {{ 'requestPage.format' | transloco }}
+            </button>
+          }
+          @if (d.method === 'GET' || d.method === 'HEAD') {
+            @if (d.body.type !== 'none') {
+              <span class="warning">{{ 'requestPage.bodyIgnored' | transloco }}</span>
+            }
+          }
+        </div>
+        @switch (d.body.type) {
+          @case ('none') {
+            <p class="hint">{{ 'requestPage.noBody' | transloco }}</p>
+          }
+          @case ('form') {
+            <app-key-value-editor
+              [items]="d.body.fields"
+              (itemsChange)="patch({ body: { type: 'form', fields: $event } })"
+              addLabel="requestPage.addField"
+            />
+          }
+          @default {
+            <app-code-editor
+              class="code"
+              [value]="$any(d.body).content"
+              [language]="d.body.type === 'text' ? 'plaintext' : $any(d.body.type)"
+              (valueChange)="setBodyContent($event)"
+              [ariaLabel]="'requestPage.tabs.body' | transloco"
+            />
+          }
+        }
+      </mat-tab>
+
+      <mat-tab [label]="'requestPage.tabs.auth' | transloco">
+        <app-auth-editor
+          [auth]="d.auth"
+          [allowInherit]="true"
+          (authChange)="patch({ auth: $event })"
+        />
+      </mat-tab>
+
+      <mat-tab [label]="'requestPage.tabs.assertions' | transloco: { count: d.assertions.length }">
+        <app-assertions-editor
+          [assertions]="d.assertions"
+          (assertionsChange)="patch({ assertions: $event })"
+          [evaluation]="evaluation()"
+          [canEvaluate]="!!selectedSend()?.result.response"
+          (evaluate)="evaluate()"
+        />
+      </mat-tab>
+
+      <mat-tab [label]="'requestPage.tabs.settings' | transloco">
+        <app-http-settings-editor
+          [settings]="d.settings ?? {}"
+          [inherited]="inheritedSettings()"
+          (settingsChange)="patch({ settings: $event })"
+        />
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+
+  <section class="response">
+    <app-response-viewer
+      [sends]="sends()"
+      [selectedId]="selectedSendId()"
+      (selectedIdChange)="selectedSendId.set($event)"
+      [sending]="sending()"
+    />
+  </section>
+}

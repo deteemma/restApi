@@ -1,0 +1,98 @@
+:host {
+  display: block;
+  padding: 16px 24px 32px;
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+h1 {
+  margin: 0;
+  font: var(--mat-sys-title-large);
+}
+
+.unsaved {
+  font: var(--mat-sys-label-medium);
+  color: var(--mat-sys-tertiary);
+}
+
+.request-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.method {
+  width: 120px;
+}
+
+.method,
+.body-type,
+.url {
+  box-sizing: border-box;
+  padding: 9px 10px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 8px;
+  background: var(--mat-sys-surface-container-low);
+  color: var(--mat-sys-on-surface);
+}
+
+.url {
+  flex: 1;
+  min-width: 240px;
+  font:
+    14px/1.4 ui-monospace,
+    'Cascadia Code',
+    Consolas,
+    monospace;
+}
+
+.url:focus {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: -1px;
+}
+
+.tabs {
+  margin-top: 12px;
+
+  ::ng-deep .mat-mdc-tab-body-content {
+    padding-top: 12px;
+  }
+}
+
+.body-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.body-type {
+  width: 200px;
+}
+
+.code {
+  height: 280px;
+}
+
+.hint {
+  font: var(--mat-sys-body-small);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.warning {
+  font: var(--mat-sys-body-small);
+  color: var(--mat-sys-tertiary);
+}
+
+.response {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+}

@@ -50,7 +50,9 @@
     "name": "Name",
     "loading": "Loading…",
     "unsaved": "Unsaved changes",
-    "unexpectedError": "An unexpected error occurred."
+    "unexpectedError": "An unexpected error occurred.",
+    "yes": "Yes",
+    "no": "No"
   },
   "tree": {
     "requests": "Requests",
@@ -102,7 +104,10 @@
     "variablesHint": "Default values, usable in every request. An environment can override them.",
     "saved": "Collection saved.",
     "delete": "Delete the collection",
-    "updated": "Updated on {{ date }}"
+    "updated": "Updated on {{ date }}",
+    "auth": "Authentication",
+    "authHint": "Used by every request set to “Inherit from collection”.",
+    "http": "HTTP settings"
   },
   "environmentPage": {
     "title": "Environment",
@@ -113,10 +118,195 @@
     "activate": "Use this environment"
   },
   "requestPage": {
-    "placeholder": "The request editor is coming soon."
+    "method": "Method",
+    "url": "URL",
+    "urlPlaceholder": "URL, for example",
+    "send": "Send",
+    "sendShortcut": "Ctrl + Enter",
+    "saveShortcut": "Ctrl + S",
+    "revert": "Discard changes",
+    "saved": "Request saved.",
+    "tabs": {
+      "params": "Params ({{ count }})",
+      "headers": "Headers ({{ count }})",
+      "body": "Body",
+      "auth": "Auth",
+      "assertions": "Assertions ({{ count }})",
+      "settings": "Settings"
+    },
+    "addParam": "Add a parameter",
+    "headerName": "Header name",
+    "addHeader": "Add a header",
+    "bodyType": "Body type",
+    "bodyTypes": {
+      "none": "None",
+      "json": "JSON",
+      "text": "Text",
+      "xml": "XML",
+      "form": "Form (urlencoded)"
+    },
+    "format": "Format",
+    "bodyIgnored": "The body is not sent with GET or HEAD.",
+    "noBody": "This request sends no body.",
+    "addField": "Add a field"
   },
   "scenarioPage": {
     "placeholder": "The scenario editor is coming soon.",
     "steps": "{{ count }} top-level step(s)"
+  },
+  "keyValue": {
+    "enabled": "Send this row",
+    "name": "Name",
+    "value": "Value",
+    "remove": "Remove the row",
+    "add": "Add a row"
+  },
+  "auth": {
+    "type": "Authentication type",
+    "types": {
+      "inherit": "Inherit from collection",
+      "none": "None",
+      "basic": "Basic",
+      "bearer": "Bearer (token)",
+      "apiKey": "API key"
+    },
+    "inheritHint": "The request uses the authentication defined in the collection settings.",
+    "username": "Username",
+    "password": "Password",
+    "token": "Token",
+    "keyName": "Key name",
+    "keyValue": "Key value",
+    "keyIn": "Location",
+    "inHeader": "Header",
+    "inQuery": "URL parameter",
+    "secretHint": "For a secret, use a secret variable: its value stays encrypted and masked. For example:"
+  },
+  "settings": {
+    "timeout": "Timeout",
+    "inherited": "Collection: {{ value }}",
+    "followRedirects": "Follow redirects",
+    "ignoreTlsErrors": "Ignore invalid TLS certificates",
+    "inheritChoice": "Same as collection ({{ value }})"
+  },
+  "assertions": {
+    "add": "Add an assertion",
+    "evaluate": "Evaluate",
+    "evaluateHint": "Evaluate the assertions against the displayed response",
+    "evaluateDisabled": "Send the request first to get a response",
+    "empty": "No assertions: the step succeeds if the HTTP status is 2xx.",
+    "target": "Target",
+    "operator": "Operator",
+    "expected": "Expected value",
+    "remove": "Remove the assertion",
+    "found": "Value found:",
+    "notFound": "Nothing found at this place in the response.",
+    "help": {
+      "toggle": "Help",
+      "title": "Assertions help",
+      "intro": "An assertion compares part of the response with an expected value. The expected value may contain variables, for example:",
+      "targets": "Targets",
+      "operators": "Operators",
+      "meaning": "Meaning",
+      "example": "Example",
+      "jsonPath": "JSON paths",
+      "noAssertion": "Without assertions, a step succeeds as soon as the HTTP status is between 200 and 299."
+    },
+    "targets": {
+      "status": {
+        "label": "HTTP status",
+        "description": "The response status code, for example 200 or 404."
+      },
+      "header": {
+        "label": "Header",
+        "description": "The value of a response header (header names are case-insensitive)."
+      },
+      "jsonPath": {
+        "label": "JSON path",
+        "description": "A value read from the JSON response body. Several matches give a list."
+      },
+      "duration": {
+        "label": "Duration (ms)",
+        "description": "The response time, in milliseconds."
+      }
+    },
+    "operators": {
+      "equals": {
+        "label": "equals",
+        "description": "Identical to the expected value (objects and lists are compared as JSON)."
+      },
+      "notEquals": {
+        "label": "does not equal",
+        "description": "Present and different from the expected value."
+      },
+      "contains": {
+        "label": "contains",
+        "description": "The text contains the value, or the list contains this item."
+      },
+      "exists": {
+        "label": "exists",
+        "description": "The target is present in the response (even if empty or null)."
+      },
+      "notExists": {
+        "label": "does not exist",
+        "description": "The target is absent from the response."
+      },
+      "matches": {
+        "label": "matches (regex)",
+        "description": "The text matches the regular expression."
+      },
+      "lt": {
+        "label": "less than",
+        "description": "Strictly smaller number."
+      },
+      "lte": {
+        "label": "less than or equal to",
+        "description": "Smaller or equal number."
+      },
+      "gt": {
+        "label": "greater than",
+        "description": "Strictly greater number."
+      },
+      "gte": {
+        "label": "greater than or equal to",
+        "description": "Greater or equal number."
+      },
+      "isType": {
+        "label": "is of type",
+        "description": "JSON type: string, number, boolean, null, array or object."
+      }
+    },
+    "jsonPath": {
+      "field": "A top-level field",
+      "nested": "A nested field",
+      "index": "The first item of a list (index 0)",
+      "last": "The last item of a list",
+      "all": "This field in every item (gives a list)",
+      "length": "The number of items in a list",
+      "recursive": "This field at any depth",
+      "filter": "Filter items by a condition",
+      "quoted": "A name with spaces or special characters"
+    }
+  },
+  "stepErrors": {
+    "UNKNOWN_VARIABLE": "Unknown variable",
+    "CIRCULAR_VARIABLE": "Variables referencing each other in a loop",
+    "REQUEST_NOT_FOUND": "Request not found",
+    "INVALID_URL": "Invalid URL",
+    "TIMEOUT": "Timed out",
+    "NETWORK": "Network error",
+    "UNEXPECTED_STATUS": "Non-2xx HTTP status",
+    "ASSERTION_FAILED": "Assertion failed",
+    "EXTRACTION_FAILED": "Value to extract not found"
+  },
+  "response": {
+    "title": "Response",
+    "sizeBytes": "{{ value }} B",
+    "sizeKb": "{{ value }} KB",
+    "history": "Previous sends",
+    "truncated": "Body truncated to 1 MB.",
+    "body": "Body",
+    "headers": "Headers ({{ count }})",
+    "sent": "Sent request",
+    "empty": "Send the request to see its response."
   }
 }

@@ -50,7 +50,9 @@
     "name": "Name",
     "loading": "Wird geladen…",
     "unsaved": "Nicht gespeicherte Änderungen",
-    "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten."
+    "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten.",
+    "yes": "Ja",
+    "no": "Nein"
   },
   "tree": {
     "requests": "Anfragen",
@@ -102,7 +104,10 @@
     "variablesHint": "Standardwerte, in jeder Anfrage verwendbar. Eine Umgebung kann sie überschreiben.",
     "saved": "Sammlung gespeichert.",
     "delete": "Sammlung löschen",
-    "updated": "Geändert am {{ date }}"
+    "updated": "Geändert am {{ date }}",
+    "auth": "Authentifizierung",
+    "authHint": "Wird von allen Anfragen verwendet, die auf „Von der Sammlung erben“ eingestellt sind.",
+    "http": "HTTP-Einstellungen"
   },
   "environmentPage": {
     "title": "Umgebung",
@@ -113,10 +118,195 @@
     "activate": "Diese Umgebung verwenden"
   },
   "requestPage": {
-    "placeholder": "Der Anfrage-Editor ist demnächst verfügbar."
+    "method": "Methode",
+    "url": "URL",
+    "urlPlaceholder": "URL, zum Beispiel",
+    "send": "Senden",
+    "sendShortcut": "Strg + Eingabe",
+    "saveShortcut": "Strg + S",
+    "revert": "Änderungen verwerfen",
+    "saved": "Anfrage gespeichert.",
+    "tabs": {
+      "params": "Parameter ({{ count }})",
+      "headers": "Header ({{ count }})",
+      "body": "Body",
+      "auth": "Authentifizierung",
+      "assertions": "Prüfungen ({{ count }})",
+      "settings": "Einstellungen"
+    },
+    "addParam": "Parameter hinzufügen",
+    "headerName": "Header-Name",
+    "addHeader": "Header hinzufügen",
+    "bodyType": "Body-Typ",
+    "bodyTypes": {
+      "none": "Keiner",
+      "json": "JSON",
+      "text": "Text",
+      "xml": "XML",
+      "form": "Formular (urlencoded)"
+    },
+    "format": "Formatieren",
+    "bodyIgnored": "Bei GET oder HEAD wird kein Body gesendet.",
+    "noBody": "Diese Anfrage sendet keinen Body.",
+    "addField": "Feld hinzufügen"
   },
   "scenarioPage": {
     "placeholder": "Der Szenario-Editor ist demnächst verfügbar.",
     "steps": "{{ count }} Schritt(e) auf oberster Ebene"
+  },
+  "keyValue": {
+    "enabled": "Diese Zeile senden",
+    "name": "Name",
+    "value": "Wert",
+    "remove": "Zeile entfernen",
+    "add": "Zeile hinzufügen"
+  },
+  "auth": {
+    "type": "Authentifizierungsart",
+    "types": {
+      "inherit": "Von der Sammlung erben",
+      "none": "Keine",
+      "basic": "Basic",
+      "bearer": "Bearer (Token)",
+      "apiKey": "API-Schlüssel"
+    },
+    "inheritHint": "Die Anfrage verwendet die in den Einstellungen der Sammlung definierte Authentifizierung.",
+    "username": "Benutzer",
+    "password": "Passwort",
+    "token": "Token",
+    "keyName": "Schlüsselname",
+    "keyValue": "Schlüsselwert",
+    "keyIn": "Ort",
+    "inHeader": "Header",
+    "inQuery": "URL-Parameter",
+    "secretHint": "Verwenden Sie für ein Geheimnis eine geheime Variable: Ihr Wert bleibt verschlüsselt und maskiert. Zum Beispiel:"
+  },
+  "settings": {
+    "timeout": "Zeitlimit",
+    "inherited": "Sammlung: {{ value }}",
+    "followRedirects": "Weiterleitungen folgen",
+    "ignoreTlsErrors": "Ungültige TLS-Zertifikate ignorieren",
+    "inheritChoice": "Wie die Sammlung ({{ value }})"
+  },
+  "assertions": {
+    "add": "Prüfung hinzufügen",
+    "evaluate": "Auswerten",
+    "evaluateHint": "Prüfungen auf die angezeigte Antwort anwenden",
+    "evaluateDisabled": "Senden Sie zuerst die Anfrage, um eine Antwort zu erhalten",
+    "empty": "Keine Prüfungen: Der Schritt ist erfolgreich, wenn der HTTP-Status 2xx ist.",
+    "target": "Ziel",
+    "operator": "Operator",
+    "expected": "Erwarteter Wert",
+    "remove": "Prüfung entfernen",
+    "found": "Gefundener Wert:",
+    "notFound": "An dieser Stelle der Antwort wurde nichts gefunden.",
+    "help": {
+      "toggle": "Hilfe",
+      "title": "Hilfe zu Prüfungen",
+      "intro": "Eine Prüfung vergleicht einen Teil der Antwort mit einem erwarteten Wert. Der erwartete Wert kann Variablen enthalten, zum Beispiel:",
+      "targets": "Ziele",
+      "operators": "Operatoren",
+      "meaning": "Bedeutung",
+      "example": "Beispiel",
+      "jsonPath": "JSON-Pfade",
+      "noAssertion": "Ohne Prüfung ist ein Schritt erfolgreich, sobald der HTTP-Status zwischen 200 und 299 liegt."
+    },
+    "targets": {
+      "status": {
+        "label": "HTTP-Status",
+        "description": "Der Statuscode der Antwort, z. B. 200 oder 404."
+      },
+      "header": {
+        "label": "Header",
+        "description": "Der Wert eines Antwort-Headers (Groß-/Kleinschreibung des Namens egal)."
+      },
+      "jsonPath": {
+        "label": "JSON-Pfad",
+        "description": "Ein Wert aus dem JSON-Body der Antwort. Mehrere Treffer ergeben eine Liste."
+      },
+      "duration": {
+        "label": "Dauer (ms)",
+        "description": "Die Antwortzeit in Millisekunden."
+      }
+    },
+    "operators": {
+      "equals": {
+        "label": "gleich",
+        "description": "Identisch mit dem erwarteten Wert (Objekte und Listen werden als JSON verglichen)."
+      },
+      "notEquals": {
+        "label": "ungleich",
+        "description": "Vorhanden und vom erwarteten Wert verschieden."
+      },
+      "contains": {
+        "label": "enthält",
+        "description": "Der Text enthält den Wert, oder die Liste enthält dieses Element."
+      },
+      "exists": {
+        "label": "existiert",
+        "description": "Das Ziel ist in der Antwort vorhanden (auch leer oder null)."
+      },
+      "notExists": {
+        "label": "existiert nicht",
+        "description": "Das Ziel fehlt in der Antwort."
+      },
+      "matches": {
+        "label": "entspricht (Regex)",
+        "description": "Der Text entspricht dem regulären Ausdruck."
+      },
+      "lt": {
+        "label": "kleiner als",
+        "description": "Echt kleinere Zahl."
+      },
+      "lte": {
+        "label": "kleiner oder gleich",
+        "description": "Kleinere oder gleiche Zahl."
+      },
+      "gt": {
+        "label": "größer als",
+        "description": "Echt größere Zahl."
+      },
+      "gte": {
+        "label": "größer oder gleich",
+        "description": "Größere oder gleiche Zahl."
+      },
+      "isType": {
+        "label": "ist vom Typ",
+        "description": "JSON-Typ: string, number, boolean, null, array oder object."
+      }
+    },
+    "jsonPath": {
+      "field": "Ein Feld auf oberster Ebene",
+      "nested": "Ein verschachteltes Feld",
+      "index": "Das erste Element einer Liste (Index 0)",
+      "last": "Das letzte Element einer Liste",
+      "all": "Dieses Feld in jedem Element (ergibt eine Liste)",
+      "length": "Die Anzahl der Elemente einer Liste",
+      "recursive": "Dieses Feld in beliebiger Tiefe",
+      "filter": "Elemente nach einer Bedingung filtern",
+      "quoted": "Ein Name mit Leer- oder Sonderzeichen"
+    }
+  },
+  "stepErrors": {
+    "UNKNOWN_VARIABLE": "Unbekannte Variable",
+    "CIRCULAR_VARIABLE": "Variablen verweisen zirkulär aufeinander",
+    "REQUEST_NOT_FOUND": "Anfrage nicht gefunden",
+    "INVALID_URL": "Ungültige URL",
+    "TIMEOUT": "Zeitlimit überschritten",
+    "NETWORK": "Netzwerkfehler",
+    "UNEXPECTED_STATUS": "HTTP-Status nicht 2xx",
+    "ASSERTION_FAILED": "Prüfung fehlgeschlagen",
+    "EXTRACTION_FAILED": "Zu extrahierender Wert nicht gefunden"
+  },
+  "response": {
+    "title": "Antwort",
+    "sizeBytes": "{{ value }} B",
+    "sizeKb": "{{ value }} KB",
+    "history": "Frühere Sendungen",
+    "truncated": "Body auf 1 MB gekürzt.",
+    "body": "Body",
+    "headers": "Header ({{ count }})",
+    "sent": "Gesendete Anfrage",
+    "empty": "Senden Sie die Anfrage, um ihre Antwort zu sehen."
   }
 }

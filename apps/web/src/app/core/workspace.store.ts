@@ -1,6 +1,7 @@
 import { DOCUMENT, Injectable, computed, inject, signal } from '@angular/core';
 import type {
   CollectionDto,
+  CollectionPatch,
   CollectionTree,
   EnvironmentDto,
   RequestDto,
@@ -70,7 +71,7 @@ export class WorkspaceStore {
     return created;
   }
 
-  async updateCollection(id: string, patch: { name?: string; variables?: VariableInput[] }) {
+  async updateCollection(id: string, patch: CollectionPatch) {
     const updated = await this.api.updateCollection(id, patch);
     await Promise.all([this.loadCollections(), this.refreshTree()]);
     return updated;
