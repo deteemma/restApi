@@ -1,0 +1,139 @@
+@let s = step();
+
+@if (issues().length) {
+  <ul class="issues">
+    @for (issue of issues(); track $index) {
+      <li [class]="issue.severity">
+        <mat-icon>{{ issue.severity === 'error' ? 'error' : 'warning' }}</mat-icon>
+        {{ 'scenarioIssues.' + issue.code | transloco: { detail: issue.detail ?? '' } }}
+      </li>
+    }
+  </ul>
+}
+
+@switch (s.type) {
+  @case ('group') {
+    <h3>{{ (isRoot() ? 'scenarioEditor.rootGroup' : 'scenarioEditor.group') | transloco }}</h3>
+    @if (!isRoot()) {
+      <label class="field">
+        <span>{{ 'common.name' | transloco }}</span>
+        <input
+          [value]="s.name ?? ''"
+          (input)="patch({ name: $any($event.target).value || undefined })"
+          [placeholder]="'scenarioEditor.groupNamePlaceholder' | transloco"
+        />
+      </label>
+    }
+    <div class="field">
+      <span>{{ 'scenarioEditor.mode' | transloco }}</span>
+      <mat-select
+        [aria-label]="'scenarioEditor.mode' | transloco"
+        [value]="s.mode"
+        (valueChange)="patch({ mode: $event })"
+      >
+        <mat-option value="sequential">{{
+          'scenarioEditor.modes.sequential' | transloco
+        }}</mat-option>
+        <mat-option value="parallel">{{ 'scenarioEditor.modes.parallel' | transloco }}</mat-option>
+      </mat-select>
+    </div>
+    <p class="hint">{{ 'scenarioEditor.modeHints.' + s.mode | transloco }}</p>
+    @if (s.mode === 'parallel') {
+      <label class="field">
+        <span>{{ 'scenarioEditor.maxConcurrency' | transloco }}</span>
+        <input
+          type="number"
+          min="1"
+          max="100"
+          [value]="s.maxConcurrency ?? ''"
+          [placeholder]="defaultConcurrency"
+          (input)="setConcurrency($any($event.target).value)"
+        />
+      </label>
+    }
+    <mat-checkbox
+      [checked]="s.stopOnFailure ?? true"
+      (change)="patch({ stopOnFailure: $event.checked })"
+    >
+      {{ 'scenarioEditor.stopOnFailure' | transloco }}
+    </mat-checkbox>
+    <p class="hint">{{ 'scenarioEditor.stopOnFailureHint' | transloco }}</p>
+  }
+
+  @case ('pause') {
+    <h3>{{ 'scenarioEditor.pause' | transloco }}</h3>
+    <label class="field">
+      <span>{{ 'scenarioEditor.duration' | transloco }}</span>
+      <input
+        type="number"
+        min="0"
+        max="3600000"
+        [value]="s.durationMs"
+        (input)="patch({ durationMs: +$any($event.target).value || 0 })"
+      />
+    </label>
+  }
+
+  @case ('request') {
+    <h3>
+      @if (request(); as r) {
+        <app-method-badge [method]="r.method" />
+        <a [routerLink]="requestLink()">{{ r.name }}</a>
+      } @else {
+        {{ 'scenarioEditor.orphan' | transloco }}
+      }
+    </h3>
+
+    <h4>{{ 'scenarioEditor.overrides.title' | transloco }}</h4>
+    <p class="hint">{{ 'scenarioEditor.overrides.hint' | transloco }}</p>
+    <h5>{{ 'variables.title' | transloco }}</h5>
+    <app-key-value-editor
+      [items]="overrideVariables()"
+      (itemsChange)="setOverrideVariables($event)"
+      addLabel="scenarioEditor.overrides.addVariable"
+    />
+    <h5>
+      {{
+        'requestPage.tabs.headers'
+          | transloco: { count: requestStep()?.overrides?.headers?.length ?? 0 }
+      }}
+    </h5>
+    <app-key-value-editor
+      [items]="requestStep()?.overrides?.headers ?? []"
+      (itemsChange)="setOverrides({ headers: $event })"
+      namePlaceholder="requestPage.headerName"
+      addLabel="requestPage.addHeader"
+    />
+    <h5>{{ 'requestPage.tabs.body' | transloco }}</h5>
+    <mat-select
+      class="body-type"
+      [value]="overrideBodyType()"
+      (valueChange)="setOverrideBodyType($event)"
+    >
+      @for (t of bodyTypes; track t) {
+        <mat-option [value]="t">
+          {{
+            (t === 'keep' ? 'scenarioEditor.overrides.keepBody' : 'requestPage.bodyTypes.' + t)
+              | transloco
+          }}
+        </mat-option>
+      }
+    </mat-select>
+    @if (overrideBodyType() !== 'keep' && overrideBodyType() !== 'none') {
+      <app-code-editor
+        class="code"
+        [value]="$any(requestStep()?.overrides?.body)?.content ?? ''"
+        [language]="overrideBodyType() === 'text' ? 'plaintext' : $any(overrideBodyType())"
+        (valueChange)="setOverrideBodyContent($event)"
+      />
+    }
+
+    <h4>{{ 'extractions.title' | transloco }}</h4>
+    <app-extractions-editor
+      [extractions]="s.extractions"
+      [evaluation]="extractionResults()"
+      (extractionsChange)="setExtractions($event)"
+      (evaluate)="evaluateExtractions()"
+    />
+  }
+}

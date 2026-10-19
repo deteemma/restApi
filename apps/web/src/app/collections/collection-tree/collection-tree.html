@@ -34,7 +34,13 @@
       @if (nodes().length === 0) {
         <p class="empty">{{ 'tree.emptyRequests' | transloco }}</p>
       } @else {
-        <ul>
+        <!-- Source de glisser-déposer vers le Scénario ouvert (sans réorganisation ni dépôt ici). -->
+        <ul
+          cdkDropList
+          cdkDropListSortingDisabled
+          [cdkDropListConnectedTo]="dnd.dropListIds()"
+          [cdkDropListEnterPredicate]="noDropHere"
+        >
           <ng-container *ngTemplateOutlet="branch; context: { $implicit: nodes(), depth: 0 }" />
         </ul>
       }
@@ -139,7 +145,13 @@
         />
       }
     } @else {
-      <li class="item" [style.--depth]="depth">
+      <li
+        class="item"
+        [style.--depth]="depth"
+        cdkDrag
+        [cdkDragData]="{ kind: 'request', request: node.request }"
+        [cdkDragDisabled]="dnd.dropListIds().length === 0"
+      >
         <a [routerLink]="link('request', node.request.id)" routerLinkActive="active">
           <app-method-badge [method]="node.request.method" />
           <span class="label">{{ node.request.name }}</span>

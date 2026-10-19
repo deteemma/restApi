@@ -18,6 +18,10 @@ import type {
   EvaluationDto,
   SendDto,
   SendInput,
+  RunDto,
+  RunInput,
+  RunStatus,
+  RunSummaryDto,
 } from '@restapi/shared';
 import { firstValueFrom, type Observable } from 'rxjs';
 
@@ -123,6 +127,38 @@ export class ApiClient {
   deleteScenario(id: string) {
     return this.call(this.http.delete<void>(`/api/scenarios/${id}`));
   }
+  /** Anomalies d'un brouillon de Scénario, non enregistré. */
+  getDraftIssues(collectionId: string, input: ScenarioInput) {
+    return this.call(
+      this.http.post<ScenarioIssue[]>(`/api/collections/${collectionId}/scenario-issues`, input),
+    );
+  }
+
+  // Exécutions
+  startRun(scenarioId: string, input: RunInput) {
+    return this.call(this.http.post<RunSummaryDto>(`/api/scenarios/${scenarioId}/runs`, input));
+  }
+  stopRun(runId: string) {
+    return this.call(this.http.post<void>(`/api/runs/${runId}/stop`, {}));
+  }
+  getRun(runId: string) {
+    return this.call(this.http.get<RunDto>(`/api/runs/${runId}`));
+  }
+  listRuns(filter: {
+    scenarioId?: string;
+    collectionId?: string;
+    status?: RunStatus;
+    limit?: number;
+  }) {
+    const params = Object.fromEntries(
+      Object.entries(filter).filter(([, v]) => v !== undefined),
+    ) as Record<string, string | number>;
+    return this.call(this.http.get<RunSummaryDto[]>('/api/runs', { params }));
+  }
+  setRunPinned(runId: string, pinned: boolean) {
+    return this.call(this.http.patch<RunSummaryDto>(`/api/runs/${runId}`, { pinned }));
+  }
+
   getScenarioIssues(id: string) {
     return this.call(this.http.get<ScenarioIssue[]>(`/api/scenarios/${id}/issues`));
   }

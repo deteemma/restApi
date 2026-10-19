@@ -1,3 +1,4 @@
+import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -12,6 +13,7 @@ import { Notifier } from '../../core/notifier';
 import { WorkspaceStore } from '../../core/workspace.store';
 import { Dialogs } from '../../shared/ui/dialogs';
 import { MethodBadge } from '../../shared/ui/method-badge';
+import { ScenarioDnd } from '../../scenarios/scenario-dnd';
 import { buildRequestTree } from '../request-tree';
 
 type Kind = 'folder' | 'request' | 'scenario' | 'environment';
@@ -20,6 +22,8 @@ type Kind = 'folder' | 'request' | 'scenario' | 'environment';
 @Component({
   selector: 'app-collection-tree',
   imports: [
+    CdkDrag,
+    CdkDropList,
     NgTemplateOutlet,
     MatButtonModule,
     MatIconModule,
@@ -36,6 +40,9 @@ type Kind = 'folder' | 'request' | 'scenario' | 'environment';
 })
 export class CollectionTree {
   protected readonly store = inject(WorkspaceStore);
+  /** Zones de dépôt du Scénario ouvert, vers lesquelles on peut glisser une Requête. */
+  protected readonly dnd = inject(ScenarioDnd);
+  protected readonly noDropHere = () => false;
   private readonly dialogs = inject(Dialogs);
   private readonly notifier = inject(Notifier);
   private readonly router = inject(Router);

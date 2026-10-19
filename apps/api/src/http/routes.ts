@@ -122,6 +122,10 @@ export function managementRoutes(store: Store): Router {
     await store.scenarios.delete(owner(res), param(req, 'id'));
     res.status(204).end();
   });
+  r.post('/collections/:id/scenario-issues', async (req, res) => {
+    const input = parse(scenarioInput, req.body);
+    res.json(await store.scenarios.draftIssues(owner(res), param(req, 'id'), input));
+  });
   r.get('/scenarios/:id/issues', async (req, res) => {
     res.json(await store.scenarios.issues(owner(res), param(req, 'id')));
   });

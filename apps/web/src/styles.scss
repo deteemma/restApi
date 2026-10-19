@@ -24,6 +24,15 @@ html {
   );
 }
 
+// Aperçu d'un glisser-déposer : rendu à la racine du document, hors des styles des composants.
+.cdk-drag-preview {
+  box-shadow: var(--mat-sys-level3);
+  border-radius: 8px;
+  background: var(--mat-sys-surface-container-high);
+  color: var(--mat-sys-on-surface);
+  list-style: none;
+}
+
 html,
 body {
   height: 100%;

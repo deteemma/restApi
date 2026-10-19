@@ -1,0 +1,67 @@
+<div class="summary">
+  @if (response(); as r) {
+    <span class="status" [class]="statusClass()">{{ r.status }} {{ r.statusText }}</span>
+    <span class="metric">{{ r.durationMs }} ms</span>
+    <span class="metric">{{ size().key | transloco: { value: size().value } }}</span>
+  } @else if (result().error; as error) {
+    <span class="status error">{{ 'stepErrors.' + error.code | transloco }}</span>
+  }
+</div>
+
+@if (result().error; as error) {
+  @if (error.detail) {
+    <p class="error-detail">
+      <mat-icon>error_outline</mat-icon>
+      {{ 'stepErrors.' + error.code | transloco }} — <code>{{ error.detail }}</code>
+    </p>
+  }
+}
+
+<mat-tab-group animationDuration="0ms" mat-stretch-tabs="false">
+  @if (response(); as r) {
+    <mat-tab [label]="'response.body' | transloco">
+      @if (r.bodyTruncated) {
+        <p class="note">{{ 'response.truncated' | transloco }}</p>
+      }
+      <app-code-editor
+        class="body"
+        [value]="body().text"
+        [language]="body().language"
+        [readOnly]="true"
+        [ariaLabel]="'response.body' | transloco"
+      />
+    </mat-tab>
+    <mat-tab [label]="'response.headers' | transloco: { count: (r.headers | keyvalue).length }">
+      <table class="kv">
+        <tbody>
+          @for (h of r.headers | keyvalue; track h.key) {
+            <tr>
+              <th scope="row">{{ h.key }}</th>
+              <td>{{ h.value }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </mat-tab>
+  }
+  @if (result().request; as sent) {
+    <mat-tab [label]="'response.sent' | transloco">
+      <p class="sent-line">
+        <strong>{{ sent.method }}</strong> <code>{{ sent.url }}</code>
+      </p>
+      <table class="kv">
+        <tbody>
+          @for (h of sent.headers | keyvalue; track h.key) {
+            <tr>
+              <th scope="row">{{ h.key }}</th>
+              <td>{{ h.value }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+      @if (sent.body) {
+        <pre class="sent-body">{{ sent.body }}</pre>
+      }
+    </mat-tab>
+  }
+</mat-tab-group>

@@ -484,3 +484,45 @@ describe('Scénarios', () => {
     await t.http.delete(`/api/requests/${r.body.id}`).expect(204);
   });
 });
+
+describe('Anomalies d’un brouillon de Scénario', () => {
+  it('valide un arbre non enregistré au regard de la Collection', async () => {
+    const c = await createCollection({ name: 'C', variables: [{ name: 'baseUrl', value: 'x' }] });
+    const r = await t.http
+      .post(`/api/collections/${c.id}/requests`)
+      .send(minimalRequest({ url: '{{baseUrl}}/{{id}}' }));
+    const res = await t.http
+      .post(`/api/collections/${c.id}/scenario-issues`)
+      .send({
+        name: 'Brouillon',
+        root: {
+          id: 'root',
+          type: 'group',
+          mode: 'parallel',
+          steps: [
+            {
+              id: 'a',
+              type: 'request',
+              requestId: r.body.id,
+              extractions: [{ variable: 'id', source: { type: 'status' } }],
+            },
+            {
+              id: 'b',
+              type: 'request',
+              requestId: r.body.id,
+              extractions: [{ variable: 'id', source: { type: 'status' } }],
+            },
+          ],
+        },
+      })
+      .expect(200);
+    expect(
+      res.body.map((i: { code: string; stepId: string }) => `${i.code}:${i.stepId}`).sort(),
+    ).toEqual([
+      'CONFLICTING_PARALLEL_EXTRACTION:a',
+      'CONFLICTING_PARALLEL_EXTRACTION:b',
+      'UNDEFINED_VARIABLE:a',
+      'UNDEFINED_VARIABLE:b',
+    ]);
+  });
+});

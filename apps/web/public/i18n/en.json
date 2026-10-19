@@ -150,10 +150,6 @@
     "noBody": "This request sends no body.",
     "addField": "Add a field"
   },
-  "scenarioPage": {
-    "placeholder": "The scenario editor is coming soon.",
-    "steps": "{{ count }} top-level step(s)"
-  },
   "keyValue": {
     "enabled": "Send this row",
     "name": "Name",
@@ -308,5 +304,95 @@
     "headers": "Headers ({{ count }})",
     "sent": "Sent request",
     "empty": "Send the request to see its response."
+  },
+  "extractions": {
+    "title": "Extractions",
+    "add": "Add an extraction",
+    "evaluateHint": "Evaluate against the response of the request's last send",
+    "help": "An extraction stores a value from the response in a run variable, usable by the following steps. In a parallel group, it is only visible once the group has finished.",
+    "empty": "No extractions.",
+    "variable": "Variable",
+    "source": "Source",
+    "remove": "Remove the extraction",
+    "noSend": "Send the request from its editor first to be able to evaluate."
+  },
+  "scenarioEditor": {
+    "rootGroup": "Scenario root",
+    "group": "Group",
+    "groupNamePlaceholder": "Name (optional)",
+    "mode": "Mode",
+    "modes": {
+      "sequential": "Sequential",
+      "parallel": "Parallel"
+    },
+    "modeHints": {
+      "sequential": "Steps run one after another, in order.",
+      "parallel": "Steps run at the same time, up to the maximum concurrency."
+    },
+    "maxConcurrency": "Maximum concurrency",
+    "stopOnFailure": "Stop on first failure",
+    "stopOnFailureHint": "On: as soon as a step fails, the next ones are skipped (in parallel, steps already started still finish).",
+    "pause": "Pause",
+    "duration": "Duration (ms)",
+    "orphan": "Deleted request (orphan step)",
+    "overrides": {
+      "title": "Overrides",
+      "hint": "Values specific to this step, replacing those of the request or of the variables.",
+      "addVariable": "Add a variable",
+      "keepBody": "Request body (unchanged)"
+    },
+    "continueOnFailure": "continues on failure",
+    "pauseLabel": "Pause · {{ ms }} ms",
+    "stepActions": "Step actions",
+    "duplicate": "Duplicate",
+    "emptyGroup": "Empty group",
+    "dropHere": "Drag a request here, or use the + button",
+    "addStep": "Add a step",
+    "addRequest": "Request",
+    "addSequential": "Sequential group",
+    "addParallel": "Parallel group",
+    "addPause": "Pause",
+    "saved": "Scenario saved.",
+    "errors": "{{ count }} blocking issue(s)",
+    "warnings": "{{ count }} warning(s)",
+    "tree": "Scenario steps",
+    "dragHint": "Tip: drag requests from the left panel into a group, and reorder steps with their handle."
+  },
+  "scenarioRun": {
+    "noResult": "No result for this step yet.",
+    "launchTitle": "Run “{{ name }}”",
+    "parameters": "Run parameters",
+    "parametersHint": "Values valid for this run only; they take precedence over the environment and the collection.",
+    "addParameter": "Add a parameter",
+    "launch": "Run",
+    "stop": "Stop",
+    "backToEdit": "Back to editing",
+    "blocked": "Fix the blocking issues first",
+    "launchHint": "Saves the scenario, then starts a run",
+    "progress": "{{ done }} / {{ total }} steps finished",
+    "selectStep": "Click a step to see its result."
+  },
+  "scenarioIssues": {
+    "CONFLICTING_PARALLEL_EXTRACTION": "Another branch of this parallel group also extracts the variable “{{ detail }}”.",
+    "ORPHAN_STEP": "The request of this step has been deleted.",
+    "DUPLICATE_STEP_ID": "Duplicate step identifier.",
+    "INVALID_PAUSE": "Invalid pause duration.",
+    "INVALID_CONCURRENCY": "Invalid maximum concurrency.",
+    "UNDEFINED_VARIABLE": "The variable “{{ detail }}” is not defined anywhere at this point (it may come from a run parameter).",
+    "EMPTY_GROUP": "This group is empty."
+  },
+  "stepStatus": {
+    "pending": "Pending",
+    "running": "Running",
+    "succeeded": "Succeeded",
+    "failed": "Failed",
+    "skipped": "Skipped",
+    "stopped": "Stopped"
+  },
+  "runStatus": {
+    "running": "Running",
+    "succeeded": "Succeeded",
+    "failed": "Failed",
+    "stopped": "Stopped"
   }
 }

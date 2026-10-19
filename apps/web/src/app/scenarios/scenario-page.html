@@ -1,0 +1,109 @@
+@if (draft(); as d) {
+  <header class="bar">
+    <mat-icon>account_tree</mat-icon>
+    <h1>{{ d.name }}</h1>
+    @if (dirty()) {
+      <span class="unsaved">{{ 'common.unsaved' | transloco }}</span>
+    }
+    <span class="issues-summary">
+      @if (errorCount()) {
+        <span class="error">
+          <mat-icon>error</mat-icon
+          >{{ 'scenarioEditor.errors' | transloco: { count: errorCount() } }}
+        </span>
+      }
+      @if (warningCount()) {
+        <span class="warning">
+          <mat-icon>warning</mat-icon
+          >{{ 'scenarioEditor.warnings' | transloco: { count: warningCount() } }}
+        </span>
+      }
+    </span>
+    <span class="spacer"></span>
+
+    @if (tracker.running()) {
+      <button mat-stroked-button class="danger" (click)="stop()">
+        <mat-icon>stop</mat-icon>{{ 'scenarioRun.stop' | transloco }}
+      </button>
+    } @else {
+      @if (runState()) {
+        <button mat-button (click)="tracker.clear()">
+          <mat-icon>edit</mat-icon>{{ 'scenarioRun.backToEdit' | transloco }}
+        </button>
+      }
+      @if (dirty()) {
+        <button mat-button (click)="revert()">{{ 'requestPage.revert' | transloco }}</button>
+      }
+      <button
+        mat-stroked-button
+        (click)="save()"
+        [disabled]="!dirty()"
+        [matTooltip]="'requestPage.saveShortcut' | transloco"
+      >
+        {{ 'common.save' | transloco }}
+      </button>
+      <button
+        mat-flat-button
+        (click)="launch()"
+        [disabled]="errorCount() > 0 || d.root.steps.length === 0"
+        [matTooltip]="
+          (errorCount() > 0 ? 'scenarioRun.blocked' : 'scenarioRun.launchHint') | transloco
+        "
+      >
+        <mat-icon>play_arrow</mat-icon>{{ 'scenarioRun.launch' | transloco }}
+      </button>
+    }
+  </header>
+
+  @if (runState(); as run) {
+    <div class="run-banner" [class]="run.status" role="status">
+      <app-status-icon [status]="run.status" />
+      <strong>{{ 'runStatus.' + run.status | transloco }}</strong>
+      @if (tracker.progress(); as p) {
+        <span>{{ 'scenarioRun.progress' | transloco: { done: p.done, total: p.total } }}</span>
+      }
+      @if (tracker.run()?.environmentName; as env) {
+        <span class="env"><mat-icon>dns</mat-icon>{{ env }}</span>
+      }
+      <span class="spacer"></span>
+      <span class="hint">{{ 'scenarioRun.selectStep' | transloco }}</span>
+    </div>
+    @if (tracker.running()) {
+      <mat-progress-bar mode="indeterminate" />
+    }
+  }
+
+  <div class="layout">
+    <section class="tree" [attr.aria-label]="'scenarioEditor.tree' | transloco">
+      <app-scenario-tree-view
+        [root]="d.root"
+        [requests]="requests()"
+        [issues]="issuesByStep()"
+        [runState]="runState()"
+        [selectedId]="selectedId()"
+        [readOnly]="!!runState()"
+        (rootChange)="setRoot($event)"
+        (stepSelect)="selectedId.set($event)"
+      />
+      @if (!runState()) {
+        <p class="hint">{{ 'scenarioEditor.dragHint' | transloco }}</p>
+      }
+    </section>
+
+    <aside class="panel">
+      @if (runState()) {
+        @if (selectedRun(); as stepRun) {
+          <app-step-result [status]="stepRun.status" [result]="stepRun.result" />
+        }
+      } @else if (selectedStep(); as step) {
+        <app-step-properties
+          [step]="step"
+          [request]="selectedRequest()"
+          [issues]="issuesByStep().get(step.id) ?? []"
+          [isRoot]="step.id === d.root.id"
+          (stepChange)="setStep($event)"
+        />
+      }
+    </aside>
+  </div>
+}

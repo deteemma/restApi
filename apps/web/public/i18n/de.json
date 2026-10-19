@@ -150,10 +150,6 @@
     "noBody": "Diese Anfrage sendet keinen Body.",
     "addField": "Feld hinzufügen"
   },
-  "scenarioPage": {
-    "placeholder": "Der Szenario-Editor ist demnächst verfügbar.",
-    "steps": "{{ count }} Schritt(e) auf oberster Ebene"
-  },
   "keyValue": {
     "enabled": "Diese Zeile senden",
     "name": "Name",
@@ -308,5 +304,95 @@
     "headers": "Header ({{ count }})",
     "sent": "Gesendete Anfrage",
     "empty": "Senden Sie die Anfrage, um ihre Antwort zu sehen."
+  },
+  "extractions": {
+    "title": "Extraktionen",
+    "add": "Extraktion hinzufügen",
+    "evaluateHint": "Auf die Antwort der letzten Sendung der Anfrage anwenden",
+    "help": "Eine Extraktion speichert einen Wert der Antwort in einer Ausführungsvariable, die die folgenden Schritte nutzen können. In einer parallelen Gruppe ist sie erst nach Abschluss der Gruppe sichtbar.",
+    "empty": "Keine Extraktionen.",
+    "variable": "Variable",
+    "source": "Quelle",
+    "remove": "Extraktion entfernen",
+    "noSend": "Senden Sie die Anfrage zuerst in ihrem Editor, um auswerten zu können."
+  },
+  "scenarioEditor": {
+    "rootGroup": "Wurzel des Szenarios",
+    "group": "Gruppe",
+    "groupNamePlaceholder": "Name (optional)",
+    "mode": "Modus",
+    "modes": {
+      "sequential": "Sequenziell",
+      "parallel": "Parallel"
+    },
+    "modeHints": {
+      "sequential": "Die Schritte laufen nacheinander, in dieser Reihenfolge.",
+      "parallel": "Die Schritte laufen gleichzeitig, bis zur maximalen Parallelität."
+    },
+    "maxConcurrency": "Maximale Parallelität",
+    "stopOnFailure": "Beim ersten Fehler anhalten",
+    "stopOnFailureHint": "Aktiv: Sobald ein Schritt fehlschlägt, werden die folgenden übersprungen (parallel bereits gestartete laufen zu Ende).",
+    "pause": "Pause",
+    "duration": "Dauer (ms)",
+    "orphan": "Gelöschte Anfrage (verwaister Schritt)",
+    "overrides": {
+      "title": "Überschreibungen",
+      "hint": "Werte nur für diesen Schritt, die jene der Anfrage oder der Variablen ersetzen.",
+      "addVariable": "Variable hinzufügen",
+      "keepBody": "Body der Anfrage (unverändert)"
+    },
+    "continueOnFailure": "läuft bei Fehler weiter",
+    "pauseLabel": "Pause · {{ ms }} ms",
+    "stepActions": "Aktionen des Schritts",
+    "duplicate": "Duplizieren",
+    "emptyGroup": "Leere Gruppe",
+    "dropHere": "Ziehen Sie eine Anfrage hierher oder verwenden Sie die Schaltfläche +",
+    "addStep": "Schritt hinzufügen",
+    "addRequest": "Anfrage",
+    "addSequential": "Sequenzielle Gruppe",
+    "addParallel": "Parallele Gruppe",
+    "addPause": "Pause",
+    "saved": "Szenario gespeichert.",
+    "errors": "{{ count }} blockierende(s) Problem(e)",
+    "warnings": "{{ count }} Warnung(en)",
+    "tree": "Schritte des Szenarios",
+    "dragHint": "Tipp: Ziehen Sie Anfragen aus der linken Leiste in eine Gruppe und ordnen Sie Schritte über ihren Griff neu."
+  },
+  "scenarioRun": {
+    "noResult": "Noch kein Ergebnis für diesen Schritt.",
+    "launchTitle": "„{{ name }}“ ausführen",
+    "parameters": "Startparameter",
+    "parametersHint": "Werte nur für diese Ausführung; sie haben Vorrang vor Umgebung und Sammlung.",
+    "addParameter": "Parameter hinzufügen",
+    "launch": "Ausführen",
+    "stop": "Anhalten",
+    "backToEdit": "Zurück zur Bearbeitung",
+    "blocked": "Beheben Sie zuerst die blockierenden Probleme",
+    "launchHint": "Speichert das Szenario und startet eine Ausführung",
+    "progress": "{{ done }} / {{ total }} Schritte abgeschlossen",
+    "selectStep": "Klicken Sie auf einen Schritt, um sein Ergebnis zu sehen."
+  },
+  "scenarioIssues": {
+    "CONFLICTING_PARALLEL_EXTRACTION": "Ein anderer Zweig dieser parallelen Gruppe extrahiert ebenfalls die Variable „{{ detail }}“.",
+    "ORPHAN_STEP": "Die Anfrage dieses Schritts wurde gelöscht.",
+    "DUPLICATE_STEP_ID": "Doppelte Schrittkennung.",
+    "INVALID_PAUSE": "Ungültige Pausendauer.",
+    "INVALID_CONCURRENCY": "Ungültige maximale Parallelität.",
+    "UNDEFINED_VARIABLE": "Die Variable „{{ detail }}“ ist an dieser Stelle nirgends definiert (sie kann aus einem Startparameter stammen).",
+    "EMPTY_GROUP": "Diese Gruppe ist leer."
+  },
+  "stepStatus": {
+    "pending": "Wartend",
+    "running": "Läuft",
+    "succeeded": "Erfolgreich",
+    "failed": "Fehlgeschlagen",
+    "skipped": "Übersprungen",
+    "stopped": "Angehalten"
+  },
+  "runStatus": {
+    "running": "Läuft",
+    "succeeded": "Erfolgreich",
+    "failed": "Fehlgeschlagen",
+    "stopped": "Angehalten"
   }
 }

@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
-import { JSON_PATH_EXAMPLES, OPERATORS, TARGETS } from './assertion-catalog';
+import { OPERATORS, TARGETS } from './assertion-catalog';
+import { JsonPathCheatSheet } from './json-path-cheat-sheet';
 
 /** Panneau d'aide : catalogue des cibles et des opérateurs, et aide-mémoire des chemins JSON. */
 @Component({
   selector: 'app-assertion-help',
-  imports: [TranslocoPipe],
+  imports: [TranslocoPipe, JsonPathCheatSheet],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <h3>{{ 'assertions.help.title' | transloco }}</h3>
@@ -47,18 +48,8 @@ import { JSON_PATH_EXAMPLES, OPERATORS, TARGETS } from './assertion-catalog';
     </table>
 
     <h4>{{ 'assertions.help.jsonPath' | transloco }}</h4>
-    <table>
-      <tbody>
-        @for (p of jsonPaths; track p.path) {
-          <tr>
-            <td>
-              <code>{{ p.path }}</code>
-            </td>
-            <td>{{ 'assertions.jsonPath.' + p.key | transloco }}</td>
-          </tr>
-        }
-      </tbody>
-    </table>
+
+    <app-json-path-cheat-sheet />
     <p class="note">{{ 'assertions.help.noAssertion' | transloco }}</p>
   `,
   styles: `
@@ -118,6 +109,5 @@ import { JSON_PATH_EXAMPLES, OPERATORS, TARGETS } from './assertion-catalog';
 export class AssertionHelp {
   protected readonly targets = TARGETS;
   protected readonly operators = OPERATORS;
-  protected readonly jsonPaths = JSON_PATH_EXAMPLES;
   protected readonly variableExample = '{{expectedName}}';
 }

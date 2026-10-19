@@ -19,6 +19,7 @@ import {
   type RequestInUseDetails,
   type RequestInput,
   type RunSnapshot,
+  type Scenario,
   type ScenarioDto,
   type ScenarioInput,
   type ScenarioIssue,
@@ -404,25 +405,41 @@ export function createStore(connection: Connection, box: SecretBox) {
     /** Anomalies du Scénario, au regard de sa Collection et de ses Environnements. */
     async issues(owner: string, id: string): Promise<ScenarioIssue[]> {
       const scenario = await findOwned<ScenarioDoc>(m.Scenario, owner, id);
-      const scope = { owner, collectionId: scenario.collectionId };
-      const [collection, envs, reqs] = await Promise.all([
-        m.Collection.findOne(
-          { _id: scenario.collectionId, owner },
-          { variables: 1 },
-        ).lean<CollectionDoc>(),
-        m.Environment.find(scope, { variables: 1 }).lean<EnvironmentDoc[]>(),
-        m.Request.find(scope).lean<RequestDoc[]>(),
-      ]);
-      const definedVariables = new Set([
-        ...(collection?.variables ?? []).map((v) => v.name),
-        ...envs.flatMap((e) => e.variables.map((v) => v.name)),
-      ]);
-      return validateScenario(scenarioDto(scenario), {
-        requests: Object.fromEntries(reqs.map((r) => [String(r._id), requestDefinition(r)])),
-        definedVariables,
-      });
+      return issuesFor(owner, scenario.collectionId, scenarioDto(scenario));
+    },
+
+    /** Anomalies d'un brouillon non enregistré (affichées pendant l'édition). */
+    async draftIssues(
+      owner: string,
+      collectionId: string,
+      input: ScenarioInput,
+    ): Promise<ScenarioIssue[]> {
+      const collection = await findCollection(owner, collectionId);
+      return issuesFor(owner, collection._id, { id: 'draft', ...input });
     },
   };
+
+  /** Anomalies d'un Scénario, au regard des Requêtes et des Variables de sa Collection. */
+  async function issuesFor(
+    owner: string,
+    collectionId: Types.ObjectId,
+    scenario: Scenario,
+  ): Promise<ScenarioIssue[]> {
+    const scope = { owner, collectionId };
+    const [collection, envs, reqs] = await Promise.all([
+      m.Collection.findOne({ _id: collectionId, owner }, { variables: 1 }).lean<CollectionDoc>(),
+      m.Environment.find(scope, { variables: 1 }).lean<EnvironmentDoc[]>(),
+      m.Request.find(scope).lean<RequestDoc[]>(),
+    ]);
+    const definedVariables = new Set([
+      ...(collection?.variables ?? []).map((v) => v.name),
+      ...envs.flatMap((e) => e.variables.map((v) => v.name)),
+    ]);
+    return validateScenario(scenario, {
+      requests: Object.fromEntries(reqs.map((r) => [String(r._id), requestDefinition(r)])),
+      definedVariables,
+    });
+  }
 
   // -------------------------------------------------------------------------
   // Préparation des Exécutions et des Envois (valeurs secrètes en clair, en mémoire seulement)

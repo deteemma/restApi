@@ -150,10 +150,6 @@
     "noBody": "Cette Requête n'envoie pas de corps.",
     "addField": "Ajouter un champ"
   },
-  "scenarioPage": {
-    "placeholder": "L'éditeur de Scénario sera disponible prochainement.",
-    "steps": "{{ count }} Étape(s) au premier niveau"
-  },
   "keyValue": {
     "enabled": "Envoyer cette ligne",
     "name": "Nom",
@@ -308,5 +304,95 @@
     "headers": "En-têtes ({{ count }})",
     "sent": "Requête envoyée",
     "empty": "Envoyez la Requête pour voir sa réponse."
+  },
+  "extractions": {
+    "title": "Extractions",
+    "add": "Ajouter une Extraction",
+    "evaluateHint": "Évaluer sur la réponse du dernier Envoi de la Requête",
+    "help": "Une Extraction range une valeur de la réponse dans une Variable d'exécution, utilisable par les Étapes suivantes. Dans un Groupe parallèle, elle n'est visible qu'une fois le Groupe terminé.",
+    "empty": "Aucune Extraction.",
+    "variable": "Variable",
+    "source": "Source",
+    "remove": "Retirer l'Extraction",
+    "noSend": "Envoyez d'abord la Requête depuis son éditeur pour pouvoir évaluer."
+  },
+  "scenarioEditor": {
+    "rootGroup": "Racine du Scénario",
+    "group": "Groupe",
+    "groupNamePlaceholder": "Nom (facultatif)",
+    "mode": "Mode",
+    "modes": {
+      "sequential": "Séquentiel",
+      "parallel": "Parallèle"
+    },
+    "modeHints": {
+      "sequential": "Les Étapes s'exécutent l'une après l'autre, dans l'ordre.",
+      "parallel": "Les Étapes s'exécutent en même temps, dans la limite de la concurrence maximale."
+    },
+    "maxConcurrency": "Concurrence maximale",
+    "stopOnFailure": "Arrêt au premier échec",
+    "stopOnFailureHint": "Activé : dès qu'une Étape échoue, les suivantes sont Ignorées (en parallèle, celles déjà lancées vont jusqu'au bout).",
+    "pause": "Pause",
+    "duration": "Durée (ms)",
+    "orphan": "Requête supprimée (Étape orpheline)",
+    "overrides": {
+      "title": "Surcharges",
+      "hint": "Valeurs propres à cette Étape, qui remplacent celles de la Requête ou des Variables.",
+      "addVariable": "Ajouter une Variable",
+      "keepBody": "Corps de la Requête (inchangé)"
+    },
+    "continueOnFailure": "continue si échec",
+    "pauseLabel": "Pause · {{ ms }} ms",
+    "stepActions": "Actions de l'Étape",
+    "duplicate": "Dupliquer",
+    "emptyGroup": "Groupe vide",
+    "dropHere": "Glissez une Requête ici, ou utilisez le bouton +",
+    "addStep": "Ajouter une Étape",
+    "addRequest": "Requête",
+    "addSequential": "Groupe séquentiel",
+    "addParallel": "Groupe parallèle",
+    "addPause": "Pause",
+    "saved": "Scénario enregistré.",
+    "errors": "{{ count }} Anomalie(s) bloquante(s)",
+    "warnings": "{{ count }} avertissement(s)",
+    "tree": "Étapes du Scénario",
+    "dragHint": "Astuce : glissez les Requêtes du panneau de gauche dans un Groupe, et réorganisez les Étapes par leur poignée."
+  },
+  "scenarioRun": {
+    "noResult": "Pas encore de résultat pour cette Étape.",
+    "launchTitle": "Lancer « {{ name }} »",
+    "parameters": "Paramètres de lancement",
+    "parametersHint": "Valeurs valables pour cette seule Exécution ; elles priment sur l'Environnement et la Collection.",
+    "addParameter": "Ajouter un Paramètre",
+    "launch": "Lancer",
+    "stop": "Arrêter",
+    "backToEdit": "Revenir à l'édition",
+    "blocked": "Corrigez d'abord les Anomalies bloquantes",
+    "launchHint": "Enregistre le Scénario puis lance une Exécution",
+    "progress": "{{ done }} / {{ total }} Étapes terminées",
+    "selectStep": "Cliquez sur une Étape pour voir son résultat."
+  },
+  "scenarioIssues": {
+    "CONFLICTING_PARALLEL_EXTRACTION": "Une autre branche de ce Groupe parallèle extrait aussi la Variable « {{ detail }} ».",
+    "ORPHAN_STEP": "La Requête de cette Étape a été supprimée.",
+    "DUPLICATE_STEP_ID": "Identifiant d'Étape en double.",
+    "INVALID_PAUSE": "Durée de Pause invalide.",
+    "INVALID_CONCURRENCY": "Concurrence maximale invalide.",
+    "UNDEFINED_VARIABLE": "La Variable « {{ detail }} » n'est définie nulle part à ce stade (elle pourra venir d'un Paramètre de lancement).",
+    "EMPTY_GROUP": "Ce Groupe est vide."
+  },
+  "stepStatus": {
+    "pending": "En attente",
+    "running": "En cours",
+    "succeeded": "Réussie",
+    "failed": "Échouée",
+    "skipped": "Ignorée",
+    "stopped": "Arrêtée"
+  },
+  "runStatus": {
+    "running": "En cours",
+    "succeeded": "Réussie",
+    "failed": "Échouée",
+    "stopped": "Arrêtée"
   }
 }

@@ -150,10 +150,6 @@
     "noBody": "Questa richiesta non invia un corpo.",
     "addField": "Aggiungi un campo"
   },
-  "scenarioPage": {
-    "placeholder": "L'editor degli scenari sarà presto disponibile.",
-    "steps": "{{ count }} passo/i al primo livello"
-  },
   "keyValue": {
     "enabled": "Invia questa riga",
     "name": "Nome",
@@ -308,5 +304,95 @@
     "headers": "Intestazioni ({{ count }})",
     "sent": "Richiesta inviata",
     "empty": "Invia la richiesta per vederne la risposta."
+  },
+  "extractions": {
+    "title": "Estrazioni",
+    "add": "Aggiungi un'estrazione",
+    "evaluateHint": "Valuta sulla risposta dell'ultimo invio della richiesta",
+    "help": "Un'estrazione salva un valore della risposta in una variabile di esecuzione, utilizzabile dai passi successivi. In un gruppo parallelo è visibile solo al termine del gruppo.",
+    "empty": "Nessuna estrazione.",
+    "variable": "Variabile",
+    "source": "Origine",
+    "remove": "Rimuovi l'estrazione",
+    "noSend": "Invia prima la richiesta dal suo editor per poter valutare."
+  },
+  "scenarioEditor": {
+    "rootGroup": "Radice dello scenario",
+    "group": "Gruppo",
+    "groupNamePlaceholder": "Nome (facoltativo)",
+    "mode": "Modalità",
+    "modes": {
+      "sequential": "Sequenziale",
+      "parallel": "Parallelo"
+    },
+    "modeHints": {
+      "sequential": "I passi vengono eseguiti uno dopo l'altro, in ordine.",
+      "parallel": "I passi vengono eseguiti contemporaneamente, entro la concorrenza massima."
+    },
+    "maxConcurrency": "Concorrenza massima",
+    "stopOnFailure": "Arresto al primo errore",
+    "stopOnFailureHint": "Attivo: appena un passo fallisce, i successivi vengono ignorati (in parallelo, quelli già avviati terminano).",
+    "pause": "Pausa",
+    "duration": "Durata (ms)",
+    "orphan": "Richiesta eliminata (passo orfano)",
+    "overrides": {
+      "title": "Sostituzioni",
+      "hint": "Valori propri di questo passo, che sostituiscono quelli della richiesta o delle variabili.",
+      "addVariable": "Aggiungi una variabile",
+      "keepBody": "Corpo della richiesta (invariato)"
+    },
+    "continueOnFailure": "continua in caso di errore",
+    "pauseLabel": "Pausa · {{ ms }} ms",
+    "stepActions": "Azioni del passo",
+    "duplicate": "Duplica",
+    "emptyGroup": "Gruppo vuoto",
+    "dropHere": "Trascina qui una richiesta, oppure usa il pulsante +",
+    "addStep": "Aggiungi un passo",
+    "addRequest": "Richiesta",
+    "addSequential": "Gruppo sequenziale",
+    "addParallel": "Gruppo parallelo",
+    "addPause": "Pausa",
+    "saved": "Scenario salvato.",
+    "errors": "{{ count }} anomalia/e bloccante/i",
+    "warnings": "{{ count }} avviso/i",
+    "tree": "Passi dello scenario",
+    "dragHint": "Suggerimento: trascina le richieste dal pannello di sinistra in un gruppo e riordina i passi con la loro maniglia."
+  },
+  "scenarioRun": {
+    "noResult": "Ancora nessun risultato per questo passo.",
+    "launchTitle": "Esegui «{{ name }}»",
+    "parameters": "Parametri di avvio",
+    "parametersHint": "Valori validi solo per questa esecuzione; prevalgono sull'ambiente e sulla collezione.",
+    "addParameter": "Aggiungi un parametro",
+    "launch": "Esegui",
+    "stop": "Arresta",
+    "backToEdit": "Torna alla modifica",
+    "blocked": "Correggi prima le anomalie bloccanti",
+    "launchHint": "Salva lo scenario e avvia un'esecuzione",
+    "progress": "{{ done }} / {{ total }} passi terminati",
+    "selectStep": "Fai clic su un passo per vederne il risultato."
+  },
+  "scenarioIssues": {
+    "CONFLICTING_PARALLEL_EXTRACTION": "Un altro ramo di questo gruppo parallelo estrae anche la variabile «{{ detail }}».",
+    "ORPHAN_STEP": "La richiesta di questo passo è stata eliminata.",
+    "DUPLICATE_STEP_ID": "Identificativo del passo duplicato.",
+    "INVALID_PAUSE": "Durata della pausa non valida.",
+    "INVALID_CONCURRENCY": "Concorrenza massima non valida.",
+    "UNDEFINED_VARIABLE": "La variabile «{{ detail }}» non è definita in nessun punto finora (potrà venire da un parametro di avvio).",
+    "EMPTY_GROUP": "Questo gruppo è vuoto."
+  },
+  "stepStatus": {
+    "pending": "In attesa",
+    "running": "In corso",
+    "succeeded": "Riuscito",
+    "failed": "Fallito",
+    "skipped": "Ignorato",
+    "stopped": "Arrestato"
+  },
+  "runStatus": {
+    "running": "In corso",
+    "succeeded": "Riuscita",
+    "failed": "Fallita",
+    "stopped": "Arrestata"
   }
 }

@@ -1,0 +1,177 @@
+@let r = root();
+
+<!-- La racine : toujours un Groupe, ni déplaçable ni supprimable. -->
+<div class="row root" [class.selected]="selectedId() === r.id">
+  <button type="button" class="label" (click)="stepSelect.emit(r.id)">
+    @if (status(r.id); as st) {
+      <app-status-icon [status]="st" />
+    }
+    <mat-icon>{{ r.mode === 'parallel' ? 'call_split' : 'format_list_numbered' }}</mat-icon>
+    <span>{{ 'scenarioEditor.modes.' + r.mode | transloco }}</span>
+    @if (r.mode === 'parallel') {
+      <span class="chip">max {{ r.maxConcurrency ?? 10 }}</span>
+    }
+    @if (r.stopOnFailure === false) {
+      <span class="chip">{{ 'scenarioEditor.continueOnFailure' | transloco }}</span>
+    }
+  </button>
+  @if (!readOnly()) {
+    <ng-container *ngTemplateOutlet="addMenu; context: { groupId: r.id }" />
+  }
+</div>
+<ng-container *ngTemplateOutlet="group; context: { $implicit: r }" />
+
+<!-- Contenu d'un Groupe : une zone de dépôt (récursive). -->
+<ng-template #group let-g>
+  <div
+    class="drop"
+    cdkDropList
+    [id]="dropListId(g.id)"
+    [cdkDropListData]="g.id"
+    [cdkDropListConnectedTo]="listIds()"
+    [cdkDropListDisabled]="readOnly()"
+    (cdkDropListDropped)="drop($event)"
+  >
+    @for (step of g.steps; track step.id) {
+      <div
+        class="node"
+        cdkDrag
+        [cdkDragData]="{ kind: 'step', stepId: step.id }"
+        [cdkDragDisabled]="readOnly()"
+      >
+        <div class="row" [class.selected]="selectedId() === step.id">
+          @if (!readOnly()) {
+            <mat-icon class="handle" cdkDragHandle aria-hidden="true">drag_indicator</mat-icon>
+          }
+          <button type="button" class="label" (click)="stepSelect.emit(step.id)">
+            @if (status(step.id); as st) {
+              <app-status-icon [status]="st" />
+            }
+            @switch (step.type) {
+              @case ('request') {
+                @if (request(step.requestId); as req) {
+                  <app-method-badge [method]="req.method" />
+                  <span class="name">{{ req.name }}</span>
+                } @else {
+                  <mat-icon class="orphan">link_off</mat-icon>
+                  <span class="name orphan">{{ 'scenarioEditor.orphan' | transloco }}</span>
+                }
+                @for (x of step.extractions; track $index) {
+                  <span class="chip extraction">→ {{ x.variable }}</span>
+                }
+                @if (step.overrides) {
+                  <mat-icon
+                    class="small"
+                    [matTooltip]="'scenarioEditor.overrides.title' | transloco"
+                    >tune</mat-icon
+                  >
+                }
+              }
+              @case ('group') {
+                <mat-icon>{{
+                  step.mode === 'parallel' ? 'call_split' : 'format_list_numbered'
+                }}</mat-icon>
+                <span class="name">{{
+                  step.name || ('scenarioEditor.modes.' + step.mode | transloco)
+                }}</span>
+                @if (step.mode === 'parallel') {
+                  <span class="chip">max {{ step.maxConcurrency ?? 10 }}</span>
+                }
+                @if (step.stopOnFailure === false) {
+                  <span class="chip">{{ 'scenarioEditor.continueOnFailure' | transloco }}</span>
+                }
+              }
+              @case ('pause') {
+                <mat-icon>hourglass_empty</mat-icon>
+                <span class="name">{{
+                  'scenarioEditor.pauseLabel' | transloco: { ms: step.durationMs }
+                }}</span>
+              }
+            }
+            @if (worstSeverity(step.id); as severity) {
+              <mat-icon
+                class="issue"
+                [class]="severity"
+                [matTooltip]="
+                  'scenarioIssues.' + issuesOf(step.id)[0]!.code
+                    | transloco: { detail: issuesOf(step.id)[0]!.detail ?? '' }
+                "
+              >
+                {{ severity === 'error' ? 'error' : 'warning' }}
+              </mat-icon>
+            }
+          </button>
+          @if (!readOnly()) {
+            @if (step.type === 'group') {
+              <ng-container *ngTemplateOutlet="addMenu; context: { groupId: step.id }" />
+            }
+            <button
+              mat-icon-button
+              class="more"
+              [matMenuTriggerFor]="stepMenu"
+              [attr.aria-label]="'scenarioEditor.stepActions' | transloco"
+            >
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #stepMenu="matMenu">
+              <button mat-menu-item (click)="duplicate(step.id)">
+                <mat-icon>content_copy</mat-icon>{{ 'scenarioEditor.duplicate' | transloco }}
+              </button>
+              <button mat-menu-item (click)="remove(step.id)">
+                <mat-icon>delete</mat-icon>{{ 'common.delete' | transloco }}
+              </button>
+            </mat-menu>
+          }
+        </div>
+        @if (step.type === 'group') {
+          <div class="children" [class.parallel]="step.mode === 'parallel'">
+            <ng-container *ngTemplateOutlet="group; context: { $implicit: step }" />
+          </div>
+        }
+        <div *cdkDragPlaceholder class="placeholder"></div>
+      </div>
+    } @empty {
+      <p class="empty">
+        {{ (readOnly() ? 'scenarioEditor.emptyGroup' : 'scenarioEditor.dropHere') | transloco }}
+      </p>
+    }
+  </div>
+</ng-template>
+
+<!-- Menu « Ajouter » d'un Groupe (alternative au glisser-déposer, utilisable au clavier). -->
+<ng-template #addMenu let-groupId="groupId">
+  <button
+    mat-icon-button
+    class="add"
+    [matMenuTriggerFor]="menu"
+    [attr.aria-label]="'scenarioEditor.addStep' | transloco"
+    [matTooltip]="'scenarioEditor.addStep' | transloco"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+  <mat-menu #menu="matMenu">
+    <button
+      mat-menu-item
+      [matMenuTriggerFor]="requestMenu"
+      [disabled]="sortedRequests().length === 0"
+    >
+      <mat-icon>http</mat-icon>{{ 'scenarioEditor.addRequest' | transloco }}
+    </button>
+    <button mat-menu-item (click)="addGroup(groupId, 'sequential')">
+      <mat-icon>format_list_numbered</mat-icon>{{ 'scenarioEditor.addSequential' | transloco }}
+    </button>
+    <button mat-menu-item (click)="addGroup(groupId, 'parallel')">
+      <mat-icon>call_split</mat-icon>{{ 'scenarioEditor.addParallel' | transloco }}
+    </button>
+    <button mat-menu-item (click)="addPause(groupId)">
+      <mat-icon>hourglass_empty</mat-icon>{{ 'scenarioEditor.addPause' | transloco }}
+    </button>
+  </mat-menu>
+  <mat-menu #requestMenu="matMenu">
+    @for (req of sortedRequests(); track req.id) {
+      <button mat-menu-item (click)="addRequest(groupId, req.id)">
+        <app-method-badge [method]="req.method" /> {{ req.name }}
+      </button>
+    }
+  </mat-menu>
+</ng-template>
