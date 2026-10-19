@@ -2,6 +2,7 @@ import { Router, type Request, type Response } from 'express';
 import type { Store } from '../store/store';
 import { parse } from './parse';
 import {
+  collectionExport,
   collectionInput,
   collectionPatch,
   environmentInput,
@@ -26,6 +27,19 @@ export function managementRoutes(store: Store): Router {
     res
       .status(201)
       .json(await store.collections.create(owner(res), parse(collectionInput, req.body)));
+  });
+  r.post('/collections/import', async (req, res) => {
+    const data = parse(collectionExport, req.body);
+    res.status(201).json(await store.transfer.importCollection(owner(res), data));
+  });
+  r.get('/collections/:id/export', async (req, res) => {
+    const data = await store.transfer.exportCollection(owner(res), param(req, 'id'));
+    const file = `${data.collection.name}.restapi.json`;
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename="${file.replace(/[^\w.-]/g, '_')}"; filename*=UTF-8''${encodeURIComponent(file)}`,
+    );
+    res.type('application/json').send(JSON.stringify(data, null, 2));
   });
   r.get('/collections/:id', async (req, res) => {
     res.json(await store.collections.get(owner(res), param(req, 'id')));

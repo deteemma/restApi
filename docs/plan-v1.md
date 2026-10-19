@@ -1,5 +1,13 @@
 # Plan de mise en œuvre — V1
 
+> **État au 19 octobre 2026 : les livraisons L0 à L8 sont terminées.**
+>
+> Écarts par rapport au plan :
+>
+> - L'éditeur d'Extractions est arrivé en L6 avec les Étapes de Scénario, et non en L5 : une Extraction appartient à une Étape-requête, pas à une Requête.
+> - Monaco est servi sous forme précompilée (`scripts/copy-monaco.mjs`), car le bundler d'Angular ne sait pas traiter les CSS de sa version ESM.
+> - Reste à faire : déplacer une Requête ou un Dossier entre Dossiers dans le panneau gauche ; avertir quand on quitte une page avec des modifications non enregistrées.
+
 Ce plan découle de la session de conception. Pour le vocabulaire, voir [GLOSSARY.md](../GLOSSARY.md). Pour les décisions structurantes, voir [docs/adr/](adr/).
 
 Chaque livraison doit pouvoir être montrée et testée à elle seule. On développe le moteur en TDD, avant tout le reste.

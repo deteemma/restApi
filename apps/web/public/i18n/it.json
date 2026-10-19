@@ -423,5 +423,13 @@
     "assertionsSummary": "Asserzioni: {{ passed }} verificate, {{ failed }} fallite",
     "snapshotHint": "Lo scenario così com'era all'avvio (istantanea), anche se è stato modificato in seguito.",
     "noMatch": "Nessuna esecuzione corrisponde ai filtri."
+  },
+  "transfer": {
+    "import": "Importa una collezione",
+    "export": "Esporta (JSON)",
+    "exportHint": "Scarica l'intera collezione. I valori delle variabili segrete non vengono esportati; l'autenticazione inserita in chiaro sì.",
+    "exported": "Collezione esportata.",
+    "imported": "Collezione «{{ name }}» importata. Ricorda di reinserire le sue variabili segrete.",
+    "invalidFile": "Questo file non è un JSON leggibile."
   }
 }

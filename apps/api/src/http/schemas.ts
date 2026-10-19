@@ -1,6 +1,9 @@
 import { z } from 'zod';
 import {
   ASSERTION_OPERATORS,
+  EXPORT_FORMAT,
+  EXPORT_SCHEMA_VERSION,
+  type CollectionExport,
   HTTP_METHODS,
   type CollectionAuth,
   type CollectionInput,
@@ -50,7 +53,7 @@ const collectionAuthOptions = [
     in: z.enum(['header', 'query']),
   }),
 ] as const;
-const collectionAuth: z.ZodType<CollectionAuth> = z.discriminatedUnion('type', [
+export const collectionAuth: z.ZodType<CollectionAuth> = z.discriminatedUnion('type', [
   ...collectionAuthOptions,
 ]);
 const requestAuth: z.ZodType<RequestAuth> = z.discriminatedUnion('type', [
@@ -122,7 +125,7 @@ const step: z.ZodType<Step> = z.lazy(() =>
   ]),
 );
 
-const group: z.ZodType<GroupStep> = z.lazy(() =>
+export const group: z.ZodType<GroupStep> = z.lazy(() =>
   z.object({
     id: stepId,
     type: z.literal('group'),
@@ -208,3 +211,31 @@ export const evaluateInput = z.object({
   extractions: z.array(extraction).max(100).optional(),
   environmentId: objectIdLike.nullable().optional(),
 }) satisfies z.ZodType<EvaluateInput>;
+
+const exportedVariable = z.discriminatedUnion('secret', [
+  z.object({ name: variableName, secret: z.literal(false), value: text() }),
+  z.object({ name: variableName, secret: z.literal(true) }),
+]);
+
+const ref = z.string().min(1).max(100);
+
+/** Fichier d'export d'une Collection ; seule la version 1 du format est reconnue. */
+export const collectionExport = z.object({
+  format: z.literal(EXPORT_FORMAT),
+  schemaVersion: z.literal(EXPORT_SCHEMA_VERSION),
+  exportedAt: z.string().max(100),
+  collection: z.object({
+    name,
+    variables: z.array(exportedVariable).max(1_000),
+    auth: collectionAuth,
+    settings: httpSettings.required(),
+  }),
+  folders: z.array(z.object({ ref, parentRef: ref.nullable(), name })).max(10_000),
+  requests: z
+    .array(requestInput.omit({ folderId: true }).extend({ ref, folderRef: ref.nullable() }))
+    .max(10_000),
+  environments: z
+    .array(z.object({ name, variables: z.array(exportedVariable).max(1_000) }))
+    .max(1_000),
+  scenarios: z.array(z.object({ name, root: group })).max(1_000),
+}) satisfies z.ZodType<CollectionExport>;

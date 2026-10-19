@@ -11,10 +11,8 @@ import {
   type EnvironmentInput,
   type FolderDto,
   type FolderInput,
-  type GroupStep,
   type HttpMethod,
   type HttpSettings,
-  type RequestDefinition,
   type RequestDto,
   type RequestInUseDetails,
   type RequestInput,
@@ -23,7 +21,6 @@ import {
   type ScenarioDto,
   type ScenarioInput,
   type ScenarioIssue,
-  type Step,
 } from '@restapi/shared';
 import { validateScenario } from '../engine';
 import { DomainError, invalid, notFound } from '../errors';
@@ -38,7 +35,17 @@ import {
 } from './models';
 import { isObjectId, toObjectId } from './ids';
 import { createRunStore } from './run-store';
-import { applyInputs, toRecord, toView } from './variables';
+import { createTransfer } from './transfer';
+import {
+  collectionDto,
+  environmentDto,
+  folderDto,
+  referencedRequestIds,
+  requestDefinition,
+  requestDto,
+  scenarioDto,
+} from './mappers';
+import { applyInputs, toRecord } from './variables';
 
 /** Propriétaire unique de la V1 (mono-utilisateur). Toutes les opérations sont déjà filtrées par propriétaire. */
 export const LOCAL_OWNER = 'local';
@@ -560,81 +567,17 @@ export function createStore(connection: Connection, box: SecretBox) {
     },
   };
 
-  return { collections, folders, requests, environments, scenarios, runs, sends, execution };
-}
+  const transfer = createTransfer(m, box);
 
-// ---------------------------------------------------------------------------
-// Conversions document → objet de l'API
-// ---------------------------------------------------------------------------
-
-function collectionDto(doc: CollectionDoc): CollectionDto {
   return {
-    id: String(doc._id),
-    name: doc.name,
-    variables: doc.variables.map(toView),
-    auth: doc.auth as CollectionAuth,
-    settings: doc.settings as HttpSettings,
-    createdAt: doc.createdAt.toISOString(),
-    updatedAt: doc.updatedAt.toISOString(),
+    collections,
+    folders,
+    requests,
+    environments,
+    scenarios,
+    runs,
+    sends,
+    execution,
+    transfer,
   };
-}
-
-function folderDto(doc: FolderDoc): FolderDto {
-  return {
-    id: String(doc._id),
-    collectionId: String(doc.collectionId),
-    parentId: doc.parentId ? String(doc.parentId) : null,
-    name: doc.name,
-  };
-}
-
-function requestDefinition(doc: RequestDoc): RequestDefinition {
-  return {
-    id: String(doc._id),
-    name: doc.name,
-    method: doc.method as HttpMethod,
-    url: doc.url,
-    query: doc.query,
-    headers: doc.headers,
-    body: doc.body,
-    auth: doc.auth,
-    assertions: doc.assertions,
-    ...(doc.settings ? { settings: doc.settings } : {}),
-  };
-}
-
-function requestDto(doc: RequestDoc): RequestDto {
-  return {
-    ...requestDefinition(doc),
-    collectionId: String(doc.collectionId),
-    folderId: doc.folderId ? String(doc.folderId) : null,
-  };
-}
-
-function environmentDto(doc: EnvironmentDoc): EnvironmentDto {
-  return {
-    id: String(doc._id),
-    collectionId: String(doc.collectionId),
-    name: doc.name,
-    variables: doc.variables.map(toView),
-  };
-}
-
-function scenarioDto(doc: ScenarioDoc): ScenarioDto {
-  return {
-    id: String(doc._id),
-    collectionId: String(doc.collectionId),
-    name: doc.name,
-    root: doc.root as GroupStep,
-  };
-}
-
-function referencedRequestIds(root: GroupStep): string[] {
-  const ids = new Set<string>();
-  const visit = (step: Step) => {
-    if (step.type === 'request') ids.add(step.requestId);
-    if (step.type === 'group') step.steps.forEach(visit);
-  };
-  visit(root);
-  return [...ids];
 }

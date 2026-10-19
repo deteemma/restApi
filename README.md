@@ -74,6 +74,13 @@ Les Exécutions non épinglées sont purgées après `RUN_RETENTION_DAYS` jours 
 
 Les **Variables secrètes** sont chiffrées en base (AES-256-GCM, clé `SECRET_KEY`) et ne sont jamais renvoyées : l'API indique seulement `hasValue`. Pour garder une valeur secrète inchangée, renvoyez la Variable sans `value`.
 
+## Export et import
+
+- **Exporter** : réglages de la Collection → « Exporter (JSON) », ou `GET /api/collections/:id/export`.
+- **Importer** : accueil ou menu des Collections → « Importer une Collection », ou `POST /api/collections/import`. L'import crée toujours une **nouvelle** Collection.
+
+Le fichier (`format: "restapi.collection"`, `schemaVersion: 1`) contient les Dossiers, les Requêtes, les Environnements et les Scénarios. Les **valeurs des Variables secrètes ne sont jamais exportées** : elles sont à ressaisir après l'import. L'authentification saisie en clair (sans Variable) est exportée telle quelle.
+
 ## Sécurité
 
 Par défaut, l'API n'écoute que sur `127.0.0.1`. Pour l'exposer (par exemple à une CI), définissez `HOST` et **`API_KEY`** : toutes les routes `/api` sauf `/api/health` exigent alors l'en-tête `X-API-Key`.

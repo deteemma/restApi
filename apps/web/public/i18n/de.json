@@ -423,5 +423,13 @@
     "assertionsSummary": "Prüfungen: {{ passed }} bestanden, {{ failed }} fehlgeschlagen",
     "snapshotHint": "Das Szenario so, wie es ausgeführt wurde (Momentaufnahme), auch wenn es seitdem geändert wurde.",
     "noMatch": "Keine Ausführung entspricht den Filtern."
+  },
+  "transfer": {
+    "import": "Sammlung importieren",
+    "export": "Exportieren (JSON)",
+    "exportHint": "Lädt die gesamte Sammlung herunter. Werte geheimer Variablen werden nicht exportiert; im Klartext eingegebene Authentifizierung schon.",
+    "exported": "Sammlung exportiert.",
+    "imported": "Sammlung „{{ name }}“ importiert. Geben Sie ihre geheimen Variablen erneut ein.",
+    "invalidFile": "Diese Datei ist kein lesbares JSON."
   }
 }

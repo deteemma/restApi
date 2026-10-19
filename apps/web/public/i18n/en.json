@@ -423,5 +423,13 @@
     "assertionsSummary": "Assertions: {{ passed }} passed, {{ failed }} failed",
     "snapshotHint": "The scenario as it was run (snapshot), even if it has changed since.",
     "noMatch": "No runs match the filters."
+  },
+  "transfer": {
+    "import": "Import a collection",
+    "export": "Export (JSON)",
+    "exportHint": "Downloads the whole collection. Secret variable values are not exported; authentication typed in clear text is.",
+    "exported": "Collection exported.",
+    "imported": "Collection “{{ name }}” imported. Remember to enter its secret variables again.",
+    "invalidFile": "This file is not readable JSON."
   }
 }

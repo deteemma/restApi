@@ -423,5 +423,13 @@
     "assertionsSummary": "Assertions : {{ passed }} vérifiée(s), {{ failed }} en échec",
     "snapshotHint": "Le Scénario tel qu'il a été lancé (Instantané), même s'il a été modifié depuis.",
     "noMatch": "Aucune Exécution ne correspond aux filtres."
+  },
+  "transfer": {
+    "import": "Importer une Collection",
+    "export": "Exporter (JSON)",
+    "exportHint": "Télécharge la Collection complète. Les valeurs des Variables secrètes ne sont pas exportées ; l'authentification saisie en clair l'est.",
+    "exported": "Collection exportée.",
+    "imported": "Collection « {{ name }} » importée. Pensez à ressaisir ses Variables secrètes.",
+    "invalidFile": "Ce fichier n'est pas un JSON lisible."
   }
 }

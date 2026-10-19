@@ -13,6 +13,12 @@ export class Notifier {
     this.snackBar.open(this.transloco.translate(key, params), undefined, { duration: 3000 });
   }
 
+  /** Message d'échec traduit, quand l'erreur ne vient pas de l'API. */
+  failure(key: string, params?: Record<string, unknown>): void {
+    const message = this.transloco.translate(key, params);
+    this.snackBar.open(message, this.transloco.translate('common.close'), { duration: 6000 });
+  }
+
   /** Affiche la traduction du code d'erreur de l'API, ou un message générique. */
   error(error: unknown): void {
     const code = apiErrorCode(error);

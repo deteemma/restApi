@@ -50,6 +50,19 @@ export class ApiClient {
   deleteCollection(id: string) {
     return this.call(this.http.delete<void>(`/api/collections/${id}`));
   }
+  /** Fichier d'export d'une Collection, avec le nom proposé par le serveur. */
+  async exportCollection(id: string): Promise<{ blob: Blob; filename: string }> {
+    const response = await this.call(
+      this.http.get(`/api/collections/${id}/export`, { observe: 'response', responseType: 'blob' }),
+    );
+    return {
+      blob: response.body!,
+      filename: filenameOf(response.headers.get('Content-Disposition')),
+    };
+  }
+  importCollection(data: unknown) {
+    return this.call(this.http.post<CollectionDto>('/api/collections/import', data));
+  }
   getTree(collectionId: string) {
     return this.call(this.http.get<CollectionTree>(`/api/collections/${collectionId}/tree`));
   }
@@ -165,4 +178,12 @@ export class ApiClient {
   getScenarioIssues(id: string) {
     return this.call(this.http.get<ScenarioIssue[]>(`/api/scenarios/${id}/issues`));
   }
+}
+
+/** Nom de fichier d'un en-tête Content-Disposition (forme UTF-8 de préférence). */
+export function filenameOf(header: string | null): string {
+  const utf8 = /filename\*=UTF-8''([^;]+)/i.exec(header ?? '');
+  if (utf8) return decodeURIComponent(utf8[1]!);
+  const plain = /filename="([^"]+)"/i.exec(header ?? '');
+  return plain?.[1] ?? 'collection.restapi.json';
 }

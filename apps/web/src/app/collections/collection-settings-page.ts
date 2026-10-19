@@ -12,10 +12,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 import type { CollectionAuth, HttpSettings, RequestAuth, VariableInput } from '@restapi/shared';
 import { ApiClient } from '../core/api-client';
+import { CollectionTransfer } from '../core/collection-transfer';
 import { Notifier } from '../core/notifier';
 import { WorkspaceStore } from '../core/workspace.store';
 import { AppDatePipe } from '../shared/ui/app-date.pipe';
@@ -32,6 +34,7 @@ import { HttpSettingsEditor } from '../requests/http-settings-editor';
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
+    MatTooltipModule,
     TranslocoPipe,
     AppDatePipe,
     VariablesEditor,
@@ -79,6 +82,14 @@ import { HttpSettingsEditor } from '../requests/http-settings-editor';
           <span class="unsaved">{{ 'common.unsaved' | transloco }}</span>
         }
         <span class="spacer"></span>
+        <button
+          mat-stroked-button
+          (click)="transfer.export(c.id)"
+          [matTooltip]="'transfer.exportHint' | transloco"
+        >
+          <mat-icon>download</mat-icon>
+          {{ 'transfer.export' | transloco }}
+        </button>
         <button mat-stroked-button class="danger" (click)="remove(c.id, c.name)">
           <mat-icon>delete</mat-icon>
           {{ 'collectionSettings.delete' | transloco }}
@@ -93,6 +104,7 @@ export class CollectionSettingsPage {
 
   private readonly api = inject(ApiClient);
   private readonly store = inject(WorkspaceStore);
+  protected readonly transfer = inject(CollectionTransfer);
   private readonly notifier = inject(Notifier);
   private readonly dialogs = inject(Dialogs);
   private readonly router = inject(Router);
