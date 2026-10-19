@@ -9,11 +9,25 @@
     "api": {
       "online": "API connectée · v{{ version }}",
       "offline": "API injoignable"
+    },
+    "toggleSidebar": "Afficher ou masquer le panneau",
+    "collection": {
+      "label": "Collection",
+      "choose": "Choisir une Collection",
+      "all": "Toutes les Collections",
+      "new": "Nouvelle Collection"
+    },
+    "environment": {
+      "label": "Environnement",
+      "none": "Aucun Environnement"
     }
   },
   "home": {
     "title": "Bienvenue",
-    "subtitle": "Préparez vos Requêtes, assemblez-les en Scénarios et lancez-les à la demande."
+    "subtitle": "Préparez vos Requêtes, assemblez-les en Scénarios et lancez-les à la demande.",
+    "empty": "Aucune Collection pour l'instant.",
+    "create": "Créer une Collection",
+    "updated": "Modifiée le {{ date }}"
   },
   "errors": {
     "API_KEY_MISSING": "Clé d'API manquante.",
@@ -25,5 +39,84 @@
     "FOLDER_NOT_EMPTY": "Ce dossier n'est pas vide.",
     "SCENARIO_INVALID": "Ce Scénario contient des Anomalies bloquantes.",
     "TOO_MANY_RUNS": "Trop d'Exécutions en cours. Réessayez dans un instant."
+  },
+  "common": {
+    "cancel": "Annuler",
+    "create": "Créer",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "rename": "Renommer",
+    "close": "Fermer",
+    "name": "Nom",
+    "loading": "Chargement…",
+    "unsaved": "Modifications non enregistrées",
+    "unexpectedError": "Une erreur inattendue s'est produite."
+  },
+  "tree": {
+    "requests": "Requêtes",
+    "scenarios": "Scénarios",
+    "environments": "Environnements",
+    "settings": "Réglages de la Collection",
+    "actions": "Actions pour « {{ name }} »",
+    "newRequest": "Nouvelle Requête",
+    "newFolder": "Nouveau Dossier",
+    "newScenario": "Nouveau Scénario",
+    "newEnvironment": "Nouvel Environnement",
+    "emptyRequests": "Aucune Requête",
+    "emptyScenarios": "Aucun Scénario",
+    "emptyEnvironments": "Aucun Environnement",
+    "expand": "Déplier « {{ name }} »",
+    "collapse": "Replier « {{ name }} »"
+  },
+  "dialogs": {
+    "renameTitle": "Renommer « {{ name }} »",
+    "deleteTitle": "Supprimer « {{ name }} » ?",
+    "deleteMessage": "Cette action est définitive.",
+    "deleteCollectionMessage": "La Collection et tout son contenu (Requêtes, Scénarios, Environnements et historique des Exécutions) seront supprimés.",
+    "requestInUseTitle": "Requête utilisée",
+    "requestInUseMessage": "Cette Requête est utilisée par les Scénarios suivants. Si vous la supprimez, leurs Étapes deviendront orphelines.",
+    "deleteAnyway": "Supprimer quand même"
+  },
+  "variables": {
+    "title": "Variables",
+    "name": "Nom",
+    "value": "Valeur",
+    "secret": "Secrète",
+    "makeSecret": "Rendre la Variable secrète",
+    "makePlain": "Ne plus rendre la Variable secrète",
+    "add": "Ajouter une Variable",
+    "remove": "Retirer la Variable",
+    "empty": "Aucune Variable.",
+    "keepSecret": "Valeur enregistrée — laisser vide pour la conserver",
+    "noSecretValue": "Aucune valeur",
+    "problems": {
+      "emptyName": "Nom obligatoire",
+      "invalidName": "Lettres, chiffres, « _ », « . » ou « - » uniquement",
+      "duplicate": "Nom en double",
+      "secretRenamed": "Variable secrète renommée : ressaisissez sa valeur"
+    }
+  },
+  "collectionSettings": {
+    "title": "Réglages de la Collection",
+    "name": "Nom de la Collection",
+    "variablesHint": "Valeurs par défaut, utilisables dans toutes les Requêtes. Un Environnement peut les remplacer.",
+    "saved": "Collection enregistrée.",
+    "delete": "Supprimer la Collection",
+    "updated": "Modifiée le {{ date }}"
+  },
+  "environmentPage": {
+    "title": "Environnement",
+    "name": "Nom de l'Environnement",
+    "hint": "Les Variables d'un Environnement priment sur celles de la Collection.",
+    "saved": "Environnement enregistré.",
+    "active": "Environnement actif",
+    "activate": "Utiliser cet Environnement"
+  },
+  "requestPage": {
+    "placeholder": "L'éditeur de Requête sera disponible prochainement."
+  },
+  "scenarioPage": {
+    "placeholder": "L'éditeur de Scénario sera disponible prochainement.",
+    "steps": "{{ count }} Étape(s) au premier niveau"
   }
 }

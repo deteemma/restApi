@@ -9,11 +9,25 @@
     "api": {
       "online": "API connessa · v{{ version }}",
       "offline": "API non raggiungibile"
+    },
+    "toggleSidebar": "Mostra o nascondi il pannello",
+    "collection": {
+      "label": "Collezione",
+      "choose": "Scegli una collezione",
+      "all": "Tutte le collezioni",
+      "new": "Nuova collezione"
+    },
+    "environment": {
+      "label": "Ambiente",
+      "none": "Nessun ambiente"
     }
   },
   "home": {
     "title": "Benvenuto",
-    "subtitle": "Prepara le tue richieste, componile in scenari ed eseguile su richiesta."
+    "subtitle": "Prepara le tue richieste, componile in scenari ed eseguile su richiesta.",
+    "empty": "Ancora nessuna collezione.",
+    "create": "Crea una collezione",
+    "updated": "Modificata il {{ date }}"
   },
   "errors": {
     "API_KEY_MISSING": "Chiave API mancante.",
@@ -25,5 +39,84 @@
     "FOLDER_NOT_EMPTY": "Questa cartella non è vuota.",
     "SCENARIO_INVALID": "Questo scenario contiene anomalie bloccanti.",
     "TOO_MANY_RUNS": "Troppe esecuzioni in corso. Riprova tra poco."
+  },
+  "common": {
+    "cancel": "Annulla",
+    "create": "Crea",
+    "save": "Salva",
+    "delete": "Elimina",
+    "rename": "Rinomina",
+    "close": "Chiudi",
+    "name": "Nome",
+    "loading": "Caricamento…",
+    "unsaved": "Modifiche non salvate",
+    "unexpectedError": "Si è verificato un errore imprevisto."
+  },
+  "tree": {
+    "requests": "Richieste",
+    "scenarios": "Scenari",
+    "environments": "Ambienti",
+    "settings": "Impostazioni della collezione",
+    "actions": "Azioni per «{{ name }}»",
+    "newRequest": "Nuova richiesta",
+    "newFolder": "Nuova cartella",
+    "newScenario": "Nuovo scenario",
+    "newEnvironment": "Nuovo ambiente",
+    "emptyRequests": "Nessuna richiesta",
+    "emptyScenarios": "Nessuno scenario",
+    "emptyEnvironments": "Nessun ambiente",
+    "expand": "Espandi «{{ name }}»",
+    "collapse": "Comprimi «{{ name }}»"
+  },
+  "dialogs": {
+    "renameTitle": "Rinomina «{{ name }}»",
+    "deleteTitle": "Eliminare «{{ name }}»?",
+    "deleteMessage": "L'operazione è definitiva.",
+    "deleteCollectionMessage": "La collezione e tutto il suo contenuto (richieste, scenari, ambienti e cronologia delle esecuzioni) verranno eliminati.",
+    "requestInUseTitle": "Richiesta in uso",
+    "requestInUseMessage": "Questa richiesta è usata dai seguenti scenari. Se la elimini, i loro passi diventeranno orfani.",
+    "deleteAnyway": "Elimina comunque"
+  },
+  "variables": {
+    "title": "Variabili",
+    "name": "Nome",
+    "value": "Valore",
+    "secret": "Segreta",
+    "makeSecret": "Rendi segreta la variabile",
+    "makePlain": "Non rendere più segreta la variabile",
+    "add": "Aggiungi una variabile",
+    "remove": "Rimuovi la variabile",
+    "empty": "Nessuna variabile.",
+    "keepSecret": "Valore salvato — lascia vuoto per mantenerlo",
+    "noSecretValue": "Nessun valore",
+    "problems": {
+      "emptyName": "Nome obbligatorio",
+      "invalidName": "Solo lettere, cifre, «_», «.» o «-»",
+      "duplicate": "Nome duplicato",
+      "secretRenamed": "Variabile segreta rinominata: reinserisci il valore"
+    }
+  },
+  "collectionSettings": {
+    "title": "Impostazioni della collezione",
+    "name": "Nome della collezione",
+    "variablesHint": "Valori predefiniti, utilizzabili in ogni richiesta. Un ambiente può sostituirli.",
+    "saved": "Collezione salvata.",
+    "delete": "Elimina la collezione",
+    "updated": "Modificata il {{ date }}"
+  },
+  "environmentPage": {
+    "title": "Ambiente",
+    "name": "Nome dell'ambiente",
+    "hint": "Le variabili di un ambiente hanno la precedenza su quelle della collezione.",
+    "saved": "Ambiente salvato.",
+    "active": "Ambiente attivo",
+    "activate": "Usa questo ambiente"
+  },
+  "requestPage": {
+    "placeholder": "L'editor delle richieste sarà presto disponibile."
+  },
+  "scenarioPage": {
+    "placeholder": "L'editor degli scenari sarà presto disponibile.",
+    "steps": "{{ count }} passo/i al primo livello"
   }
 }

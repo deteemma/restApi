@@ -9,11 +9,25 @@
     "api": {
       "online": "API verbunden · v{{ version }}",
       "offline": "API nicht erreichbar"
+    },
+    "toggleSidebar": "Seitenleiste ein- oder ausblenden",
+    "collection": {
+      "label": "Sammlung",
+      "choose": "Sammlung auswählen",
+      "all": "Alle Sammlungen",
+      "new": "Neue Sammlung"
+    },
+    "environment": {
+      "label": "Umgebung",
+      "none": "Keine Umgebung"
     }
   },
   "home": {
     "title": "Willkommen",
-    "subtitle": "Bereiten Sie Ihre Anfragen vor, stellen Sie sie zu Szenarien zusammen und führen Sie sie bei Bedarf aus."
+    "subtitle": "Bereiten Sie Ihre Anfragen vor, stellen Sie sie zu Szenarien zusammen und führen Sie sie bei Bedarf aus.",
+    "empty": "Noch keine Sammlungen.",
+    "create": "Sammlung erstellen",
+    "updated": "Geändert am {{ date }}"
   },
   "errors": {
     "API_KEY_MISSING": "API-Schlüssel fehlt.",
@@ -25,5 +39,84 @@
     "FOLDER_NOT_EMPTY": "Dieser Ordner ist nicht leer.",
     "SCENARIO_INVALID": "Dieses Szenario enthält blockierende Probleme.",
     "TOO_MANY_RUNS": "Zu viele laufende Ausführungen. Bitte versuchen Sie es gleich erneut."
+  },
+  "common": {
+    "cancel": "Abbrechen",
+    "create": "Erstellen",
+    "save": "Speichern",
+    "delete": "Löschen",
+    "rename": "Umbenennen",
+    "close": "Schließen",
+    "name": "Name",
+    "loading": "Wird geladen…",
+    "unsaved": "Nicht gespeicherte Änderungen",
+    "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten."
+  },
+  "tree": {
+    "requests": "Anfragen",
+    "scenarios": "Szenarien",
+    "environments": "Umgebungen",
+    "settings": "Einstellungen der Sammlung",
+    "actions": "Aktionen für „{{ name }}“",
+    "newRequest": "Neue Anfrage",
+    "newFolder": "Neuer Ordner",
+    "newScenario": "Neues Szenario",
+    "newEnvironment": "Neue Umgebung",
+    "emptyRequests": "Keine Anfragen",
+    "emptyScenarios": "Keine Szenarien",
+    "emptyEnvironments": "Keine Umgebungen",
+    "expand": "„{{ name }}“ aufklappen",
+    "collapse": "„{{ name }}“ zuklappen"
+  },
+  "dialogs": {
+    "renameTitle": "„{{ name }}“ umbenennen",
+    "deleteTitle": "„{{ name }}“ löschen?",
+    "deleteMessage": "Dies kann nicht rückgängig gemacht werden.",
+    "deleteCollectionMessage": "Die Sammlung und ihr gesamter Inhalt (Anfragen, Szenarien, Umgebungen und Ausführungsverlauf) werden gelöscht.",
+    "requestInUseTitle": "Anfrage wird verwendet",
+    "requestInUseMessage": "Diese Anfrage wird von den folgenden Szenarien verwendet. Wenn Sie sie löschen, werden deren Schritte verwaist.",
+    "deleteAnyway": "Trotzdem löschen"
+  },
+  "variables": {
+    "title": "Variablen",
+    "name": "Name",
+    "value": "Wert",
+    "secret": "Geheim",
+    "makeSecret": "Variable geheim halten",
+    "makePlain": "Variable nicht mehr geheim halten",
+    "add": "Variable hinzufügen",
+    "remove": "Variable entfernen",
+    "empty": "Keine Variablen.",
+    "keepSecret": "Wert gespeichert – leer lassen, um ihn zu behalten",
+    "noSecretValue": "Kein Wert",
+    "problems": {
+      "emptyName": "Name erforderlich",
+      "invalidName": "Nur Buchstaben, Ziffern, „_“, „.“ oder „-“",
+      "duplicate": "Doppelter Name",
+      "secretRenamed": "Geheime Variable umbenannt: Wert erneut eingeben"
+    }
+  },
+  "collectionSettings": {
+    "title": "Einstellungen der Sammlung",
+    "name": "Name der Sammlung",
+    "variablesHint": "Standardwerte, in jeder Anfrage verwendbar. Eine Umgebung kann sie überschreiben.",
+    "saved": "Sammlung gespeichert.",
+    "delete": "Sammlung löschen",
+    "updated": "Geändert am {{ date }}"
+  },
+  "environmentPage": {
+    "title": "Umgebung",
+    "name": "Name der Umgebung",
+    "hint": "Variablen einer Umgebung haben Vorrang vor denen der Sammlung.",
+    "saved": "Umgebung gespeichert.",
+    "active": "Aktive Umgebung",
+    "activate": "Diese Umgebung verwenden"
+  },
+  "requestPage": {
+    "placeholder": "Der Anfrage-Editor ist demnächst verfügbar."
+  },
+  "scenarioPage": {
+    "placeholder": "Der Szenario-Editor ist demnächst verfügbar.",
+    "steps": "{{ count }} Schritt(e) auf oberster Ebene"
   }
 }

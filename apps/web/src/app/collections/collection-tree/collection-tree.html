@@ -1,0 +1,184 @@
+@if (store.tree(); as tree) {
+  <nav class="tree" [attr.aria-label]="tree.collection.name">
+    <a
+      class="collection"
+      [routerLink]="['/collections', tree.collection.id]"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [matTooltip]="'tree.settings' | transloco"
+    >
+      <mat-icon>tune</mat-icon>
+      <span class="label">{{ tree.collection.name }}</span>
+    </a>
+
+    <!-- Requêtes -->
+    <section>
+      <header>
+        <h2>{{ 'tree.requests' | transloco }}</h2>
+        <button
+          mat-icon-button
+          [matMenuTriggerFor]="addRoot"
+          [attr.aria-label]="'tree.newRequest' | transloco"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+        <mat-menu #addRoot="matMenu">
+          <button mat-menu-item (click)="newRequest(null)">
+            <mat-icon>http</mat-icon>{{ 'tree.newRequest' | transloco }}
+          </button>
+          <button mat-menu-item (click)="newFolder(null)">
+            <mat-icon>create_new_folder</mat-icon>{{ 'tree.newFolder' | transloco }}
+          </button>
+        </mat-menu>
+      </header>
+      @if (nodes().length === 0) {
+        <p class="empty">{{ 'tree.emptyRequests' | transloco }}</p>
+      } @else {
+        <ul>
+          <ng-container *ngTemplateOutlet="branch; context: { $implicit: nodes(), depth: 0 }" />
+        </ul>
+      }
+    </section>
+
+    <!-- Scénarios -->
+    <section>
+      <header>
+        <h2>{{ 'tree.scenarios' | transloco }}</h2>
+        <button
+          mat-icon-button
+          (click)="newScenario()"
+          [attr.aria-label]="'tree.newScenario' | transloco"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+      </header>
+      @if (tree.scenarios.length === 0) {
+        <p class="empty">{{ 'tree.emptyScenarios' | transloco }}</p>
+      }
+      <ul>
+        @for (s of tree.scenarios; track s.id) {
+          <li class="item">
+            <a [routerLink]="link('scenario', s.id)" routerLinkActive="active">
+              <mat-icon>account_tree</mat-icon>
+              <span class="label">{{ s.name }}</span>
+            </a>
+            <ng-container
+              *ngTemplateOutlet="actions; context: { kind: 'scenario', id: s.id, name: s.name }"
+            />
+          </li>
+        }
+      </ul>
+    </section>
+
+    <!-- Environnements -->
+    <section>
+      <header>
+        <h2>{{ 'tree.environments' | transloco }}</h2>
+        <button
+          mat-icon-button
+          (click)="newEnvironment()"
+          [attr.aria-label]="'tree.newEnvironment' | transloco"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+      </header>
+      @if (tree.environments.length === 0) {
+        <p class="empty">{{ 'tree.emptyEnvironments' | transloco }}</p>
+      }
+      <ul>
+        @for (e of tree.environments; track e.id) {
+          <li class="item">
+            <a [routerLink]="link('environment', e.id)" routerLinkActive="active">
+              <mat-icon>{{
+                e.id === store.environmentId() ? 'radio_button_checked' : 'dns'
+              }}</mat-icon>
+              <span class="label">{{ e.name }}</span>
+            </a>
+            <ng-container
+              *ngTemplateOutlet="actions; context: { kind: 'environment', id: e.id, name: e.name }"
+            />
+          </li>
+        }
+      </ul>
+    </section>
+  </nav>
+}
+
+<!-- Une branche de l'arborescence des Requêtes (récursive). -->
+<ng-template #branch let-nodes let-depth="depth">
+  @for (
+    node of nodes;
+    track node.kind + (node.kind === 'folder' ? node.folder.id : node.request.id)
+  ) {
+    @if (node.kind === 'folder') {
+      @let open = !isCollapsed(node.folder.id);
+      <li class="item" [style.--depth]="depth">
+        <button
+          class="toggle"
+          [attr.aria-expanded]="open"
+          type="button"
+          (click)="toggle(node.folder.id)"
+          [attr.aria-label]="
+            (open ? 'tree.collapse' : 'tree.expand') | transloco: { name: node.folder.name }
+          "
+        >
+          <mat-icon>{{ open ? 'expand_more' : 'chevron_right' }}</mat-icon>
+          <mat-icon>{{ open ? 'folder_open' : 'folder' }}</mat-icon>
+          <span class="label">{{ node.folder.name }}</span>
+        </button>
+        <ng-container
+          *ngTemplateOutlet="
+            actions;
+            context: { kind: 'folder', id: node.folder.id, name: node.folder.name }
+          "
+        />
+      </li>
+      @if (open) {
+        <ng-container
+          *ngTemplateOutlet="branch; context: { $implicit: node.children, depth: depth + 1 }"
+        />
+      }
+    } @else {
+      <li class="item" [style.--depth]="depth">
+        <a [routerLink]="link('request', node.request.id)" routerLinkActive="active">
+          <app-method-badge [method]="node.request.method" />
+          <span class="label">{{ node.request.name }}</span>
+        </a>
+        <ng-container
+          *ngTemplateOutlet="
+            actions;
+            context: { kind: 'request', id: node.request.id, name: node.request.name }
+          "
+        />
+      </li>
+    }
+  }
+</ng-template>
+
+<!-- Menu d'actions d'un élément. -->
+<ng-template #actions let-kind="kind" let-id="id" let-name="name">
+  <button
+    mat-icon-button
+    class="more"
+    [matMenuTriggerFor]="menu"
+    [attr.aria-label]="'tree.actions' | transloco: { name }"
+  >
+    <mat-icon>more_vert</mat-icon>
+  </button>
+  <mat-menu #menu="matMenu">
+    @if (kind === 'folder') {
+      <button mat-menu-item (click)="newRequest(id)">
+        <mat-icon>http</mat-icon>{{ 'tree.newRequest' | transloco }}
+      </button>
+      <button mat-menu-item (click)="newFolder(id)">
+        <mat-icon>create_new_folder</mat-icon>{{ 'tree.newFolder' | transloco }}
+      </button>
+    }
+    <button mat-menu-item (click)="rename(kind, id, name)">
+      <mat-icon>edit</mat-icon>{{ 'common.rename' | transloco }}
+    </button>
+    <button mat-menu-item (click)="remove(kind, id, name)">
+      <mat-icon>delete</mat-icon>{{ 'common.delete' | transloco }}
+    </button>
+  </mat-menu>
+</ng-template>

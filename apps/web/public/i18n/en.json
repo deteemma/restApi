@@ -9,11 +9,25 @@
     "api": {
       "online": "API connected · v{{ version }}",
       "offline": "API unreachable"
+    },
+    "toggleSidebar": "Show or hide the side panel",
+    "collection": {
+      "label": "Collection",
+      "choose": "Choose a collection",
+      "all": "All collections",
+      "new": "New collection"
+    },
+    "environment": {
+      "label": "Environment",
+      "none": "No environment"
     }
   },
   "home": {
     "title": "Welcome",
-    "subtitle": "Prepare your requests, assemble them into scenarios and run them on demand."
+    "subtitle": "Prepare your requests, assemble them into scenarios and run them on demand.",
+    "empty": "No collections yet.",
+    "create": "Create a collection",
+    "updated": "Updated on {{ date }}"
   },
   "errors": {
     "API_KEY_MISSING": "API key missing.",
@@ -25,5 +39,84 @@
     "FOLDER_NOT_EMPTY": "This folder is not empty.",
     "SCENARIO_INVALID": "This scenario has blocking issues.",
     "TOO_MANY_RUNS": "Too many runs in progress. Try again shortly."
+  },
+  "common": {
+    "cancel": "Cancel",
+    "create": "Create",
+    "save": "Save",
+    "delete": "Delete",
+    "rename": "Rename",
+    "close": "Close",
+    "name": "Name",
+    "loading": "Loading…",
+    "unsaved": "Unsaved changes",
+    "unexpectedError": "An unexpected error occurred."
+  },
+  "tree": {
+    "requests": "Requests",
+    "scenarios": "Scenarios",
+    "environments": "Environments",
+    "settings": "Collection settings",
+    "actions": "Actions for “{{ name }}”",
+    "newRequest": "New request",
+    "newFolder": "New folder",
+    "newScenario": "New scenario",
+    "newEnvironment": "New environment",
+    "emptyRequests": "No requests",
+    "emptyScenarios": "No scenarios",
+    "emptyEnvironments": "No environments",
+    "expand": "Expand “{{ name }}”",
+    "collapse": "Collapse “{{ name }}”"
+  },
+  "dialogs": {
+    "renameTitle": "Rename “{{ name }}”",
+    "deleteTitle": "Delete “{{ name }}”?",
+    "deleteMessage": "This cannot be undone.",
+    "deleteCollectionMessage": "The collection and everything in it (requests, scenarios, environments and run history) will be deleted.",
+    "requestInUseTitle": "Request in use",
+    "requestInUseMessage": "This request is used by the following scenarios. If you delete it, their steps will become orphaned.",
+    "deleteAnyway": "Delete anyway"
+  },
+  "variables": {
+    "title": "Variables",
+    "name": "Name",
+    "value": "Value",
+    "secret": "Secret",
+    "makeSecret": "Make the variable secret",
+    "makePlain": "Stop keeping the variable secret",
+    "add": "Add a variable",
+    "remove": "Remove the variable",
+    "empty": "No variables.",
+    "keepSecret": "Value saved — leave empty to keep it",
+    "noSecretValue": "No value",
+    "problems": {
+      "emptyName": "Name required",
+      "invalidName": "Letters, digits, “_”, “.” or “-” only",
+      "duplicate": "Duplicate name",
+      "secretRenamed": "Secret variable renamed: enter its value again"
+    }
+  },
+  "collectionSettings": {
+    "title": "Collection settings",
+    "name": "Collection name",
+    "variablesHint": "Default values, usable in every request. An environment can override them.",
+    "saved": "Collection saved.",
+    "delete": "Delete the collection",
+    "updated": "Updated on {{ date }}"
+  },
+  "environmentPage": {
+    "title": "Environment",
+    "name": "Environment name",
+    "hint": "Environment variables take precedence over collection variables.",
+    "saved": "Environment saved.",
+    "active": "Active environment",
+    "activate": "Use this environment"
+  },
+  "requestPage": {
+    "placeholder": "The request editor is coming soon."
+  },
+  "scenarioPage": {
+    "placeholder": "The scenario editor is coming soon.",
+    "steps": "{{ count }} top-level step(s)"
   }
 }

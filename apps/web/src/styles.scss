@@ -14,6 +14,16 @@ html {
   );
 }
 
+// Champ compact, à la hauteur d'un bouton de la barre supérieure.
+.toolbar-field {
+  @include mat.form-field-overrides(
+    (
+      container-height: 40px,
+      container-vertical-padding: 8px,
+    )
+  );
+}
+
 html,
 body {
   height: 100%;
