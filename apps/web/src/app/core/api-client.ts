@@ -148,11 +148,14 @@ export class ApiClient {
     scenarioId?: string;
     collectionId?: string;
     status?: RunStatus;
+    pinned?: boolean;
     limit?: number;
+    /** Date ISO : seulement les Exécutions lancées avant. */
+    before?: string;
   }) {
     const params = Object.fromEntries(
       Object.entries(filter).filter(([, v]) => v !== undefined),
-    ) as Record<string, string | number>;
+    ) as Record<string, string | number | boolean>;
     return this.call(this.http.get<RunSummaryDto[]>('/api/runs', { params }));
   }
   setRunPinned(runId: string, pinned: boolean) {

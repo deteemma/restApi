@@ -50,6 +50,15 @@
     <section>
       <header>
         <h2>{{ 'tree.scenarios' | transloco }}</h2>
+        <a
+          mat-icon-button
+          class="history"
+          [routerLink]="['/collections', tree.collection.id, 'runs']"
+          [attr.aria-label]="'history.title' | transloco"
+          [matTooltip]="'history.title' | transloco"
+        >
+          <mat-icon>history</mat-icon>
+        </a>
         <button
           mat-icon-button
           (click)="newScenario()"

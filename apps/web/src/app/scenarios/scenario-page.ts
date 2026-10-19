@@ -15,6 +15,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { RouterLink } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 import {
   ErrorCode,
@@ -51,6 +52,7 @@ const ISSUES_DEBOUNCE_MS = 400;
     MatIconModule,
     MatProgressBarModule,
     MatTooltipModule,
+    RouterLink,
     TranslocoPipe,
     ScenarioTreeView,
     StatusIcon,

@@ -370,7 +370,8 @@
     "blocked": "Fix the blocking issues first",
     "launchHint": "Saves the scenario, then starts a run",
     "progress": "{{ done }} / {{ total }} steps finished",
-    "selectStep": "Click a step to see its result."
+    "selectStep": "Click a step to see its result.",
+    "openInHistory": "Open in history"
   },
   "scenarioIssues": {
     "CONFLICTING_PARALLEL_EXTRACTION": "Another branch of this parallel group also extracts the variable “{{ detail }}”.",
@@ -394,5 +395,33 @@
     "succeeded": "Succeeded",
     "failed": "Failed",
     "stopped": "Stopped"
+  },
+  "history": {
+    "title": "History",
+    "wholeCollection": "whole collection",
+    "openScenario": "Open the scenario",
+    "statusFilter": "Filter by status",
+    "allStatuses": "All statuses",
+    "pinnedOnly": "Pinned only",
+    "refresh": "Refresh",
+    "retention": "Unpinned runs are deleted automatically after 30 days.",
+    "empty": "No runs yet.",
+    "columns": {
+      "status": "Status",
+      "scenario": "Scenario",
+      "startedAt": "Started",
+      "duration": "Duration",
+      "environment": "Environment",
+      "requests": "Request steps",
+      "assertions": "Assertions",
+      "pinned": "Pinned"
+    },
+    "pin": "Pin (keep indefinitely)",
+    "unpin": "Unpin",
+    "loadMore": "Load older runs",
+    "back": "Back to history",
+    "assertionsSummary": "Assertions: {{ passed }} passed, {{ failed }} failed",
+    "snapshotHint": "The scenario as it was run (snapshot), even if it has changed since.",
+    "noMatch": "No runs match the filters."
   }
 }

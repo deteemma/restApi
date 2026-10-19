@@ -1,0 +1,106 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 24px 8px 12px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+h1 {
+  margin: 0;
+  font: var(--mat-sys-title-large);
+}
+
+.spacer {
+  flex: 1;
+}
+
+.pinned {
+  --mat-button-outlined-label-text-color: var(--mat-sys-primary);
+}
+
+.summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 24px;
+  font: var(--mat-sys-body-medium);
+  background: var(--mat-sys-surface-container);
+
+  &.succeeded {
+    background: light-dark(#d1f2dd, #0f3d24);
+  }
+
+  &.failed {
+    background: var(--mat-sys-error-container);
+    color: var(--mat-sys-on-error-container);
+  }
+
+  .env {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  code {
+    font:
+      12px ui-monospace,
+      'Cascadia Code',
+      Consolas,
+      monospace;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: var(--mat-sys-surface-container-highest);
+  }
+}
+
+.layout {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 560px);
+}
+
+.tree,
+.panel {
+  min-width: 0;
+  overflow: auto;
+  padding: 16px 24px;
+}
+
+.panel {
+  border-left: 1px solid var(--mat-sys-outline-variant);
+  background: var(--mat-sys-surface-container-lowest);
+}
+
+.hint {
+  margin: 0 0 8px;
+  font: var(--mat-sys-body-small);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+@media (max-width: 1100px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .panel {
+    border-left: 0;
+    border-top: 1px solid var(--mat-sys-outline-variant);
+  }
+}

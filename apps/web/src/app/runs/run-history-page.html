@@ -1,0 +1,126 @@
+<header class="bar">
+  <mat-icon>history</mat-icon>
+  <h1>
+    {{ 'history.title' | transloco }}
+    @if (scenarioName(); as name) {
+      <span class="subtitle">— {{ name }}</span>
+    } @else if (!scenarioId()) {
+      <span class="subtitle">— {{ 'history.wholeCollection' | transloco }}</span>
+    }
+  </h1>
+  <span class="spacer"></span>
+  @if (scenarioId(); as id) {
+    <a mat-button [routerLink]="['/collections', collectionId(), 'scenarios', id]">
+      <mat-icon>account_tree</mat-icon>{{ 'history.openScenario' | transloco }}
+    </a>
+  }
+</header>
+
+<div class="filters">
+  <mat-select
+    class="status-filter"
+    [placeholder]="'history.allStatuses' | transloco"
+    [value]="status()"
+    (valueChange)="status.set($event)"
+    [aria-label]="'history.statusFilter' | transloco"
+  >
+    <mat-option [value]="null">{{ 'history.allStatuses' | transloco }}</mat-option>
+    @for (s of statuses; track s) {
+      <mat-option [value]="s">{{ 'runStatus.' + s | transloco }}</mat-option>
+    }
+  </mat-select>
+  <mat-checkbox [checked]="pinnedOnly()" (change)="pinnedOnly.set($event.checked)">
+    {{ 'history.pinnedOnly' | transloco }}
+  </mat-checkbox>
+  <span class="spacer"></span>
+  <button mat-button (click)="refresh()" [disabled]="loading()">
+    <mat-icon>refresh</mat-icon>{{ 'history.refresh' | transloco }}
+  </button>
+</div>
+
+<p class="hint">{{ 'history.retention' | transloco }}</p>
+
+@if (runs().length === 0 && !loading()) {
+  <p class="empty">
+    {{ (status() || pinnedOnly() ? 'history.noMatch' : 'history.empty') | transloco }}
+  </p>
+} @else {
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">{{ 'history.columns.status' | transloco }}</th>
+        @if (!scenarioId()) {
+          <th scope="col">{{ 'history.columns.scenario' | transloco }}</th>
+        }
+        <th scope="col">{{ 'history.columns.startedAt' | transloco }}</th>
+        <th scope="col">{{ 'history.columns.duration' | transloco }}</th>
+        <th scope="col">{{ 'history.columns.environment' | transloco }}</th>
+        <th scope="col">{{ 'history.columns.requests' | transloco }}</th>
+        <th scope="col">{{ 'history.columns.assertions' | transloco }}</th>
+        <th scope="col">
+          <span class="sr-only">{{ 'history.columns.pinned' | transloco }}</span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (run of runs(); track run.id) {
+        <tr>
+          <td>
+            <a class="status-link" [routerLink]="link(run)">
+              <app-status-icon [status]="run.status" />
+              {{ 'runStatus.' + run.status | transloco }}
+            </a>
+          </td>
+          @if (!scenarioId()) {
+            <td>{{ run.scenarioName }}</td>
+          }
+          <td>{{ run.startedAt | appDate: 'short' }}</td>
+          <td class="num">{{ run.durationMs | appDuration }}</td>
+          <td>{{ run.environmentName ?? '—' }}</td>
+          <td class="counts">
+            @if (run.stats; as st) {
+              <span class="ok" [matTooltip]="'stepStatus.succeeded' | transloco"
+                >✓ {{ st.requests.succeeded }}</span
+              >
+              @if (st.requests.failed) {
+                <span class="ko" [matTooltip]="'stepStatus.failed' | transloco"
+                  >✗ {{ st.requests.failed }}</span
+                >
+              }
+              @if (st.requests.skipped + st.requests.stopped) {
+                <span class="muted" [matTooltip]="'stepStatus.skipped' | transloco"
+                  >⊘ {{ st.requests.skipped + st.requests.stopped }}</span
+                >
+              }
+            }
+          </td>
+          <td class="counts">
+            @if (run.stats; as st) {
+              <span class="ok">✓ {{ st.assertions.passed }}</span>
+              @if (st.assertions.failed) {
+                <span class="ko">✗ {{ st.assertions.failed }}</span>
+              }
+            }
+          </td>
+          <td>
+            <button
+              mat-icon-button
+              (click)="togglePin(run)"
+              [class.pinned]="run.pinned"
+              [attr.aria-pressed]="run.pinned"
+              [attr.aria-label]="(run.pinned ? 'history.unpin' : 'history.pin') | transloco"
+              [matTooltip]="(run.pinned ? 'history.unpin' : 'history.pin') | transloco"
+            >
+              <mat-icon>{{ run.pinned ? 'push_pin' : 'keep_off' }}</mat-icon>
+            </button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+  @if (hasMore()) {
+    <button mat-stroked-button class="more" (click)="loadMore()" [disabled]="loading()">
+      {{ 'history.loadMore' | transloco }}
+    </button>
+  }
+}

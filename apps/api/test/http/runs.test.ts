@@ -491,3 +491,32 @@ describe('évaluation dans l’éditeur', () => {
       .expect(422);
   });
 });
+
+describe('historique : pagination et filtres', () => {
+  it('pagine par date de lancement et filtre les Exécutions épinglées', async () => {
+    const { addRequest, addScenario } = await setup();
+    const scenarioId = await addScenario([reqStep('a', await addRequest({}))]);
+    const ids: string[] = [];
+    for (let i = 0; i < 3; i++) {
+      ids.push((await launch(scenarioId)).id);
+      await t.runs.idle();
+    }
+    const [newest, middle, oldest] = [...ids].reverse();
+
+    const firstPage = (await t.http.get(`/api/runs?scenarioId=${scenarioId}&limit=2`).expect(200))
+      .body as RunSummaryDto[];
+    expect(firstPage.map((r) => r.id)).toEqual([newest, middle]);
+    const next = (
+      await t.http
+        .get(
+          `/api/runs?scenarioId=${scenarioId}&limit=2&before=${encodeURIComponent(firstPage[1]!.startedAt)}`,
+        )
+        .expect(200)
+    ).body as RunSummaryDto[];
+    expect(next.map((r) => r.id)).toEqual([oldest]);
+
+    await t.http.patch(`/api/runs/${middle}`).send({ pinned: true }).expect(200);
+    const pinned = (await t.http.get('/api/runs?pinned=true').expect(200)).body as RunSummaryDto[];
+    expect(pinned.map((r) => r.id)).toEqual([middle]);
+  });
+});

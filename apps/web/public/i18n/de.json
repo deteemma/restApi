@@ -370,7 +370,8 @@
     "blocked": "Beheben Sie zuerst die blockierenden Probleme",
     "launchHint": "Speichert das Szenario und startet eine Ausführung",
     "progress": "{{ done }} / {{ total }} Schritte abgeschlossen",
-    "selectStep": "Klicken Sie auf einen Schritt, um sein Ergebnis zu sehen."
+    "selectStep": "Klicken Sie auf einen Schritt, um sein Ergebnis zu sehen.",
+    "openInHistory": "Im Verlauf öffnen"
   },
   "scenarioIssues": {
     "CONFLICTING_PARALLEL_EXTRACTION": "Ein anderer Zweig dieser parallelen Gruppe extrahiert ebenfalls die Variable „{{ detail }}“.",
@@ -394,5 +395,33 @@
     "succeeded": "Erfolgreich",
     "failed": "Fehlgeschlagen",
     "stopped": "Angehalten"
+  },
+  "history": {
+    "title": "Verlauf",
+    "wholeCollection": "gesamte Sammlung",
+    "openScenario": "Szenario öffnen",
+    "statusFilter": "Nach Status filtern",
+    "allStatuses": "Alle Status",
+    "pinnedOnly": "Nur angeheftete",
+    "refresh": "Aktualisieren",
+    "retention": "Nicht angeheftete Ausführungen werden nach 30 Tagen automatisch gelöscht.",
+    "empty": "Noch keine Ausführungen.",
+    "columns": {
+      "status": "Status",
+      "scenario": "Szenario",
+      "startedAt": "Gestartet",
+      "duration": "Dauer",
+      "environment": "Umgebung",
+      "requests": "Anfrageschritte",
+      "assertions": "Prüfungen",
+      "pinned": "Angeheftet"
+    },
+    "pin": "Anheften (unbegrenzt behalten)",
+    "unpin": "Lösen",
+    "loadMore": "Ältere Ausführungen laden",
+    "back": "Zurück zum Verlauf",
+    "assertionsSummary": "Prüfungen: {{ passed }} bestanden, {{ failed }} fehlgeschlagen",
+    "snapshotHint": "Das Szenario so, wie es ausgeführt wurde (Momentaufnahme), auch wenn es seitdem geändert wurde.",
+    "noMatch": "Keine Ausführung entspricht den Filtern."
   }
 }

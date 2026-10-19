@@ -1,5 +1,6 @@
 import type {
   GroupStep,
+  RunDto,
   RequestStepResult,
   RunEvent,
   RunStatus,
@@ -42,6 +43,17 @@ export function applyRunEvent(state: RunState, event: RunEvent): RunState {
     case 'run.finished':
       return { ...state, status: event.status };
   }
+}
+
+/** État d'une Exécution passée, reconstruit depuis l'historique. */
+export function runStateFromRun(run: RunDto): RunState {
+  const state = initialRunState(run.snapshot.scenario.root);
+  for (const step of run.steps) {
+    state.steps[step.stepId] = step.result
+      ? { status: step.status, result: step.result }
+      : { status: step.status };
+  }
+  return { ...state, status: run.status };
 }
 
 /** Compteurs d'avancement : Étapes terminées sur le total. */

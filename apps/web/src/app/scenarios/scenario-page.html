@@ -20,6 +20,12 @@
       }
     </span>
     <span class="spacer"></span>
+    <a
+      mat-button
+      [routerLink]="['/collections', collectionId(), 'scenarios', scenarioId(), 'runs']"
+    >
+      <mat-icon>history</mat-icon>{{ 'history.title' | transloco }}
+    </a>
 
     @if (tracker.running()) {
       <button mat-stroked-button class="danger" (click)="stop()">
@@ -67,6 +73,11 @@
       }
       <span class="spacer"></span>
       <span class="hint">{{ 'scenarioRun.selectStep' | transloco }}</span>
+      @if (!tracker.running() && tracker.run(); as finished) {
+        <a mat-button [routerLink]="['/collections', collectionId(), 'runs', finished.id]">
+          <mat-icon>open_in_new</mat-icon>{{ 'scenarioRun.openInHistory' | transloco }}
+        </a>
+      }
     </div>
     @if (tracker.running()) {
       <mat-progress-bar mode="indeterminate" />

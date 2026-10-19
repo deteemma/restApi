@@ -40,6 +40,9 @@ export interface RunListFilter {
   scenarioId?: string;
   status?: RunStatus;
   limit?: number;
+  /** Pagination : seulement les Exécutions lancées avant cette date. */
+  before?: Date;
+  pinned?: boolean;
 }
 
 export type RunStore = ReturnType<typeof createRunStore>;
@@ -96,6 +99,8 @@ export function createRunStore(m: Models) {
       if (filter.collectionId) query['collectionId'] = oid(filter.collectionId);
       if (filter.scenarioId) query['scenarioId'] = filter.scenarioId;
       if (filter.status) query['status'] = filter.status;
+      if (filter.before) query['startedAt'] = { $lt: filter.before };
+      if (filter.pinned !== undefined) query['pinned'] = filter.pinned;
       const docs = await m.Run.find(query, { snapshot: 0, variables: 0 })
         .sort({ startedAt: -1 })
         .limit(Math.min(Math.max(filter.limit ?? 50, 1), 500))

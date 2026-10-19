@@ -370,7 +370,8 @@
     "blocked": "Corrigez d'abord les Anomalies bloquantes",
     "launchHint": "Enregistre le Scénario puis lance une Exécution",
     "progress": "{{ done }} / {{ total }} Étapes terminées",
-    "selectStep": "Cliquez sur une Étape pour voir son résultat."
+    "selectStep": "Cliquez sur une Étape pour voir son résultat.",
+    "openInHistory": "Ouvrir dans l'historique"
   },
   "scenarioIssues": {
     "CONFLICTING_PARALLEL_EXTRACTION": "Une autre branche de ce Groupe parallèle extrait aussi la Variable « {{ detail }} ».",
@@ -394,5 +395,33 @@
     "succeeded": "Réussie",
     "failed": "Échouée",
     "stopped": "Arrêtée"
+  },
+  "history": {
+    "title": "Historique",
+    "wholeCollection": "toute la Collection",
+    "openScenario": "Ouvrir le Scénario",
+    "statusFilter": "Filtrer par statut",
+    "allStatuses": "Tous les statuts",
+    "pinnedOnly": "Épinglées seulement",
+    "refresh": "Actualiser",
+    "retention": "Les Exécutions non épinglées sont supprimées automatiquement après 30 jours.",
+    "empty": "Aucune Exécution pour l'instant.",
+    "columns": {
+      "status": "Statut",
+      "scenario": "Scénario",
+      "startedAt": "Lancée le",
+      "duration": "Durée",
+      "environment": "Environnement",
+      "requests": "Étapes-requêtes",
+      "assertions": "Assertions",
+      "pinned": "Épinglée"
+    },
+    "pin": "Épingler (conserver sans limite)",
+    "unpin": "Désépingler",
+    "loadMore": "Charger les Exécutions plus anciennes",
+    "back": "Retour à l'historique",
+    "assertionsSummary": "Assertions : {{ passed }} vérifiée(s), {{ failed }} en échec",
+    "snapshotHint": "Le Scénario tel qu'il a été lancé (Instantané), même s'il a été modifié depuis.",
+    "noMatch": "Aucune Exécution ne correspond aux filtres."
   }
 }

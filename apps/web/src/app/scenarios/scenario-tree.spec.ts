@@ -1,5 +1,5 @@
 import type { GroupStep, Step } from '@restapi/shared';
-import { applyRunEvent, initialRunState, progress } from './run-state';
+import { applyRunEvent, initialRunState, progress, runStateFromRun } from './run-state';
 import {
   duplicateStep,
   findStep,
@@ -108,5 +108,24 @@ describe("état d'une Exécution suivie en direct", () => {
 
     state = applyRunEvent(state, { type: 'run.finished', status: 'failed', at: '' });
     expect(state.status).toBe('failed');
+  });
+});
+
+describe("état d'une Exécution passée", () => {
+  it('reprend le statut et le résultat enregistrés de chaque Étape', () => {
+    const result = { assertions: [], extractions: [] };
+    const state = runStateFromRun({
+      status: 'stopped',
+      snapshot: { scenario: { root: tree() } },
+      steps: [
+        { stepId: 'a', status: 'succeeded', startedAt: null, finishedAt: '', result },
+        { stepId: 'wait', status: 'stopped', startedAt: null, finishedAt: '' },
+      ],
+    } as never);
+    expect(state.status).toBe('stopped');
+    expect(state.steps['a']).toEqual({ status: 'succeeded', result });
+    expect(state.steps['wait']).toEqual({ status: 'stopped' });
+    // Une Étape sans trace (Exécution interrompue par un arrêt du serveur) reste « En attente ».
+    expect(state.steps['c']).toEqual({ status: 'pending' });
   });
 });

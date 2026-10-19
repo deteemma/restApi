@@ -1,0 +1,83 @@
+@if (run.value(); as r) {
+  @let st = state();
+  <header class="bar">
+    <a
+      mat-icon-button
+      [routerLink]="['/collections', collectionId(), 'scenarios', r.scenarioId, 'runs']"
+      [attr.aria-label]="'history.back' | transloco"
+      [matTooltip]="'history.back' | transloco"
+    >
+      <mat-icon>arrow_back</mat-icon>
+    </a>
+    <h1>{{ r.scenarioName }}</h1>
+    <span class="spacer"></span>
+    @if (scenarioExists()) {
+      <a mat-button [routerLink]="['/collections', collectionId(), 'scenarios', r.scenarioId]">
+        <mat-icon>account_tree</mat-icon>{{ 'history.openScenario' | transloco }}
+      </a>
+    }
+    @if (tracker.running()) {
+      <button mat-stroked-button (click)="tracker.stop()">
+        <mat-icon>stop</mat-icon>{{ 'scenarioRun.stop' | transloco }}
+      </button>
+    }
+    <button
+      mat-stroked-button
+      (click)="togglePin()"
+      [class.pinned]="pinned()"
+      [attr.aria-pressed]="pinned()"
+    >
+      <mat-icon>{{ pinned() ? 'push_pin' : 'keep_off' }}</mat-icon>
+      {{ (pinned() ? 'history.unpin' : 'history.pin') | transloco }}
+    </button>
+  </header>
+
+  @if (st) {
+    <div class="summary" [class]="st.status" role="status">
+      <app-status-icon [status]="st.status" />
+      <strong>{{ 'runStatus.' + st.status | transloco }}</strong>
+      <span>{{ r.startedAt | appDate }}</span>
+      @if (r.durationMs !== null) {
+        <span>{{ r.durationMs | appDuration }}</span>
+      }
+      <span class="env"
+        ><mat-icon>dns</mat-icon
+        >{{ r.environmentName ?? ('shell.environment.none' | transloco) }}</span
+      >
+      @for (p of r.snapshot.parameters | keyvalue; track p.key) {
+        <span class="param"
+          ><code>{{ p.key }}={{ p.value }}</code></span
+        >
+      }
+      @if (r.stats; as stats) {
+        <span class="spacer"></span>
+        <span>{{
+          'history.assertionsSummary'
+            | transloco: { passed: stats.assertions.passed, failed: stats.assertions.failed }
+        }}</span>
+      }
+    </div>
+    @if (tracker.running()) {
+      <mat-progress-bar mode="indeterminate" />
+    }
+
+    <div class="layout">
+      <section class="tree" [attr.aria-label]="'scenarioEditor.tree' | transloco">
+        <p class="hint">{{ 'history.snapshotHint' | transloco }}</p>
+        <app-scenario-tree-view
+          [root]="r.snapshot.scenario.root"
+          [requests]="requests()"
+          [runState]="st"
+          [selectedId]="selectedId()"
+          [readOnly]="true"
+          (stepSelect)="selectedId.set($event)"
+        />
+      </section>
+      <aside class="panel">
+        @if (selected(); as step) {
+          <app-step-result [status]="step.status" [result]="step.result" />
+        }
+      </aside>
+    </div>
+  }
+}

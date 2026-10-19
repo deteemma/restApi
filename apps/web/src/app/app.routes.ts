@@ -22,6 +22,18 @@ export const routes: Routes = [
         loadComponent: () => import('./scenarios/scenario-page').then((m) => m.ScenarioPage),
       },
       {
+        path: 'runs',
+        loadComponent: () => import('./runs/run-history-page').then((m) => m.RunHistoryPage),
+      },
+      {
+        path: 'scenarios/:scenarioId/runs',
+        loadComponent: () => import('./runs/run-history-page').then((m) => m.RunHistoryPage),
+      },
+      {
+        path: 'runs/:runId',
+        loadComponent: () => import('./runs/run-detail-page').then((m) => m.RunDetailPage),
+      },
+      {
         path: 'environments/:environmentId',
         loadComponent: () =>
           import('./environments/environment-page').then((m) => m.EnvironmentPage),

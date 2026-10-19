@@ -188,6 +188,11 @@ export const runListQuery = z.object({
   scenarioId: z.string().max(100).optional(),
   status: z.enum(['running', 'succeeded', 'failed', 'stopped']).optional(),
   limit: z.coerce.number().int().min(1).max(500).optional(),
+  before: z.coerce.date().optional(),
+  pinned: z
+    .enum(['true', 'false'])
+    .transform((v) => v === 'true')
+    .optional(),
 });
 
 export const evaluateInput = z.object({

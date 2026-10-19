@@ -370,7 +370,8 @@
     "blocked": "Correggi prima le anomalie bloccanti",
     "launchHint": "Salva lo scenario e avvia un'esecuzione",
     "progress": "{{ done }} / {{ total }} passi terminati",
-    "selectStep": "Fai clic su un passo per vederne il risultato."
+    "selectStep": "Fai clic su un passo per vederne il risultato.",
+    "openInHistory": "Apri nella cronologia"
   },
   "scenarioIssues": {
     "CONFLICTING_PARALLEL_EXTRACTION": "Un altro ramo di questo gruppo parallelo estrae anche la variabile «{{ detail }}».",
@@ -394,5 +395,33 @@
     "succeeded": "Riuscita",
     "failed": "Fallita",
     "stopped": "Arrestata"
+  },
+  "history": {
+    "title": "Cronologia",
+    "wholeCollection": "intera collezione",
+    "openScenario": "Apri lo scenario",
+    "statusFilter": "Filtra per stato",
+    "allStatuses": "Tutti gli stati",
+    "pinnedOnly": "Solo fissate",
+    "refresh": "Aggiorna",
+    "retention": "Le esecuzioni non fissate vengono eliminate automaticamente dopo 30 giorni.",
+    "empty": "Ancora nessuna esecuzione.",
+    "columns": {
+      "status": "Stato",
+      "scenario": "Scenario",
+      "startedAt": "Avviata il",
+      "duration": "Durata",
+      "environment": "Ambiente",
+      "requests": "Passi di richiesta",
+      "assertions": "Asserzioni",
+      "pinned": "Fissata"
+    },
+    "pin": "Fissa (conserva senza limiti)",
+    "unpin": "Rimuovi fissaggio",
+    "loadMore": "Carica esecuzioni più vecchie",
+    "back": "Torna alla cronologia",
+    "assertionsSummary": "Asserzioni: {{ passed }} verificate, {{ failed }} fallite",
+    "snapshotHint": "Lo scenario così com'era all'avvio (istantanea), anche se è stato modificato in seguito.",
+    "noMatch": "Nessuna esecuzione corrisponde ai filtri."
   }
 }
